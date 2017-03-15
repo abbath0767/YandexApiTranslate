@@ -1,15 +1,16 @@
 package ng.com.yandextranslate.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import ng.com.yandextranslate.R;
+import ng.com.yandextranslate.util.DrawerFragmentEnum;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+
+        setFragment(DrawerFragmentEnum.TRANSLATION.getDeclaredPosition());
     }
 }

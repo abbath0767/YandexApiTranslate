@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">YandexTranslate</string>
+
+    <string name="license">Переведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/</string>
+    <string name="open_drawer">Меню</string>
+    <string name="close_drawer">что тут?</string>
+
+    <string-array name="drawer_items">
+        <item>Перевод</item>
+        <item>История</item>
+        <item>О приложении</item>
+    </string-array>
+
+
 </resources>
