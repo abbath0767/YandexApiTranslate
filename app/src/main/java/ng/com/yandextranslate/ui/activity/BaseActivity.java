@@ -13,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+import butterknife.BindArray;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ng.com.yandextranslate.R;
 import ng.com.yandextranslate.ui.fragment.TranslateFragment;
 import ng.com.yandextranslate.util.DrawerFragmentEnum;
@@ -25,9 +28,13 @@ import ng.com.yandextranslate.util.DrawerItemClickListener;
 public class BaseActivity extends AppCompatActivity implements DrawerItemClickListener.OnDrawerItemClickListener {
 
     //ActionBar and Drawer
-    private String[] mDrawerStrings;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.drawer_list_view)
+    ListView mDrawerListView;
+    @BindArray(R.array.drawer_items)
+    String[] mDrawerStrings;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private String mTitle;
     private String mDrawerTitle;
@@ -36,6 +43,8 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        ButterKnife.bind(this);
 
         initDrawer();
 
@@ -46,14 +55,9 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
     }
 
     private void initDrawer() {
-        mDrawerStrings = getResources().getStringArray(R.array.drawer_items);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerListView = (ListView) findViewById(R.id.drawer_list_view);
-
         mDrawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mDrawerStrings));
         //set first item checked
-        setTitle(mDrawerStrings[0]);
-        mDrawerListView.setItemChecked(0, true);
+        setDrawerActivePosition(0);
 
         mDrawerListView.setOnItemClickListener(new DrawerItemClickListener(this));
 
@@ -80,9 +84,8 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
 
     @Override
     public void onDrawerItemClick(int position) {
-        setTitle(mDrawerStrings[position]);
         setFragment(position);
-        mDrawerListView.setItemChecked(position, true);
+        setDrawerActivePosition(position);
         mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
@@ -113,7 +116,12 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
                 .commit();
     }
 
-    void setTitle(String title) {
+    private void setDrawerActivePosition(int position) {
+        setTitle(mDrawerStrings[position]);
+        mDrawerListView.setItemChecked(position, true);
+    }
+
+    private void setTitle(String title) {
         mTitle = title;
         getSupportActionBar().setTitle(title);
     }
