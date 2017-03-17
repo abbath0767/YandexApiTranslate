@@ -8,7 +8,7 @@ import android.app.Application;
 
 public class App extends Application {
 
-    private AppComponent mAppComponent;
+    private static AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
@@ -23,7 +23,7 @@ public class App extends Application {
                 .build();
     }
 
-    public AppComponent getAppComponent() {
+    public static AppComponent getAppComponent() {
         return mAppComponent;
     }
 }

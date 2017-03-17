@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import ng.com.yandextranslate.App;
 import ng.com.yandextranslate.R;
 import ng.com.yandextranslate.presentation.contract.translate.TranslateContract;
 import ng.com.yandextranslate.presentation.implementation.translate.DaggerTranslateComponent;
@@ -35,8 +36,10 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         View rootView = inflater.inflate(R.layout.translate_fragment, container, false);
 
         DaggerTranslateComponent.builder()
+                .appComponent(App.getAppComponent())
                 .translateModule(new TranslateModule(this))
                 .build().inject(this);
+
 
         return rootView;
     }
