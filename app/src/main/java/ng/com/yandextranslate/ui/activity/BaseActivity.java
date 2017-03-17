@@ -17,7 +17,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ng.com.yandextranslate.R;
-import ng.com.yandextranslate.ui.fragment.TranslateFragment;
+import ng.com.yandextranslate.ui.fragment.traslate.TranslateFragment;
 import ng.com.yandextranslate.util.DrawerFragmentEnum;
 import ng.com.yandextranslate.util.DrawerItemClickListener;
 
@@ -89,8 +89,8 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
         mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
-    void setFragment(int position) {
-        DrawerFragmentEnum enumElement = DrawerFragmentEnum.values()[position];
+    void setFragment(int drawerPosition) {
+        DrawerFragmentEnum enumElement = DrawerFragmentEnum.values()[drawerPosition];
         Fragment fragment = null;
 
         switch (enumElement) {
