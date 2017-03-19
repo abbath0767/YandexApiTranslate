@@ -1,5 +1,7 @@
 package ng.com.yandextranslate.presentation.contract.translate;
 
+import java.util.Map;
+
 import ng.com.yandextranslate.model.pojo.LanguagePair;
 
 /**
@@ -11,6 +13,8 @@ public interface TranslateContract {
     interface View {
         void showTranslateResult(String message);
         void setDefaultLanguages(LanguagePair languagePair);
+
+        void setLanguages(Map<String, String> supportedLangs);
     }
 
     interface Presenter {

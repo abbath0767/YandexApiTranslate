@@ -25,7 +25,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     YandexTranslateApi mYandexTranslateApi;
     RepositoryService mRepositoryService;
 
-    Map<String, String> supportedLangs;
+    private Map<String, String> supportedLangs;
 
     //todo unhardcode
     private static String LANG = "ru";
@@ -37,20 +37,23 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
         this.mView = view;
         this.mYandexTranslateApi = api;
         this.mRepositoryService = repositoryService;
+        setSupportLanguages();
+    }
+
+    private void setSupportLanguages() {
+        supportedLangs = mRepositoryService.getLanguages();
+
+        if (supportedLangs != null && supportedLangs.size() != 0) {
+            setSupportLangToView(supportedLangs);
+        }
+
         loadSupportLanguages();
     }
 
     public void loadSupportLanguages() {
         Subscription getSupportedLanguages = RequestHelper.asyncRequest(mYandexTranslateApi.loadSupportedLangList(LANG),
                 data -> {
-                    Log.d("TAG", "Load supportedLanguges finish");
-                    supportedLangs = data.getMapLangs();
-                    //todo unhardcode
-                    if (data.getListDirs().contains("en-ru")) {
-                        mView.setDefaultLanguages(new LanguagePair("en-ru"));
-                    } else {
-                        mView.setDefaultLanguages(new LanguagePair("PRO-BLEMS"));
-                    }
+                    compareSupportLanguages(data.getMapLangs());
                 },
                 error -> {
                     //todo need error processing
@@ -58,7 +61,17 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                     error.printStackTrace();
                 }
         );
+    }
 
+    private void compareSupportLanguages(Map<String, String> supportedLangs) {
+        if (!this.supportedLangs.equals(supportedLangs)) {
+            mRepositoryService.saveNewSupportLangs(supportedLangs);
+            setSupportLangToView(supportedLangs);
+        }
+    }
+
+    private void setSupportLangToView(Map<String, String> supportedLangs) {
+        mView.setLanguages(supportedLangs);
     }
 
     @Override

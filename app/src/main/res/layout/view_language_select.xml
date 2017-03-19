@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/language_select_spinner_from"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="2" />
+
+        <ImageButton
+            android:id="@+id/language_select_swap_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_refresh"/>
+
+        <Spinner
+            android:id="@+id/language_select_spinner_to"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+</merge>

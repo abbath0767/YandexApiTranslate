@@ -3,10 +3,18 @@ package ng.com.yandextranslate.ui.fragment.traslate;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -20,6 +28,7 @@ import ng.com.yandextranslate.presentation.implementation.translate.DaggerTransl
 import ng.com.yandextranslate.presentation.implementation.translate.TranslateModule;
 import ng.com.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
 import ng.com.yandextranslate.ui.fragment.BaseFragment;
+import ng.com.yandextranslate.ui.view.LanguageSelectView;
 
 /**
  * Created by NG on 15.03.17.
@@ -29,6 +38,8 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
     @BindView(R.id.test_text_view)
     TextView mTestTextView;
+    @BindView(R.id.translate_language_select)
+    LanguageSelectView mLanguageSelectView;
 
     @Inject
     TranslatePresenterImpl mPresenter;
@@ -49,14 +60,48 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 .translateModule(new TranslateModule(this))
                 .build().inject(this);
 
+        setSpinnerClickListeners();
 
         return rootView;
     }
 
+    private void setSpinnerClickListeners() {
+        //todo make this in LanguageSelectView
+        mLanguageSelectView.setOnItemClickListeners(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG", "select: " + position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }, new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
 
     @Override
     public void setDefaultLanguages(LanguagePair languagePair) {
-        mTestTextView.setText("FROM : " + languagePair.getLanguageFrom() + "\nTO : " + languagePair.getLanguageTo());
+
+    }
+
+    @Override
+    public void setLanguages(Map<String, String> supportedLangs) {
+        List<String> list = new ArrayList<>();
+        for (Map.Entry<String, String> entry : supportedLangs.entrySet()) {
+            list.add(entry.getValue());
+        }
+        mLanguageSelectView.setLanguages(list);
     }
 
     @Override

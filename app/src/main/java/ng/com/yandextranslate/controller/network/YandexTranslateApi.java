@@ -17,7 +17,6 @@ public interface YandexTranslateApi {
     public static final String API_KEY =
             "trnsl.1.1.20170315T100226Z.fe4426a08d83fdd0.2bbc02ed514d8f9358a92c8673b0ae3a4ffd1ef3";
     public static final String API_STRING = "key=" + API_KEY;
-    public static final String RU = "ru";
 
     @POST("api/v1.5/tr.json/getLangs?" + API_STRING)
     Observable<LanguageList> loadSupportedLangList(@Query("ui") String languageKey);
