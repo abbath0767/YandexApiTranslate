@@ -60,39 +60,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 .translateModule(new TranslateModule(this))
                 .build().inject(this);
 
-        setSpinnerClickListeners();
-
         return rootView;
-    }
-
-    private void setSpinnerClickListeners() {
-        //todo make this in LanguageSelectView
-        mLanguageSelectView.setOnItemClickListeners(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("TAG", "select: " + position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        }, new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    @Override
-    public void setDefaultLanguages(LanguagePair languagePair) {
-
     }
 
     @Override
@@ -105,6 +73,21 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     }
 
     @Override
+    public String getFrom() {
+        return mLanguageSelectView.getFrom();
+    }
+
+    @Override
+    public String getTo() {
+        return mLanguageSelectView.getTo();
+    }
+
+    @Override
     public void showTranslateResult(String message) {
+    }
+
+    @Override
+    public void setDefaultLanguages(LanguagePair languagePair) {
+
     }
 }

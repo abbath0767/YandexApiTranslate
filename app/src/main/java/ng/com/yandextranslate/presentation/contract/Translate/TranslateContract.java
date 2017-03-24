@@ -13,8 +13,9 @@ public interface TranslateContract {
     interface View {
         void showTranslateResult(String message);
         void setDefaultLanguages(LanguagePair languagePair);
-
         void setLanguages(Map<String, String> supportedLangs);
+        String getFrom();
+        String getTo();
     }
 
     interface Presenter {

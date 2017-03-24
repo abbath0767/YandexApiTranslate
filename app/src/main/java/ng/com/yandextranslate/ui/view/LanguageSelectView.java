@@ -2,6 +2,7 @@ package ng.com.yandextranslate.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -21,8 +22,6 @@ import ng.com.yandextranslate.R;
 public class LanguageSelectView extends LinearLayout {
 
     private Context context;
-    private AdapterView.OnItemSelectedListener listenerFrom;
-    private AdapterView.OnItemSelectedListener listenerTo;
 
     @BindView(R.id.language_select_swap_button)
     ImageButton mRefreshImageButton;
@@ -31,7 +30,10 @@ public class LanguageSelectView extends LinearLayout {
     @BindView(R.id.language_select_spinner_to)
     Spinner mToSpinner;
 
-    List<String> supportedLanguages;
+    private List<String> supportedLanguages;
+    private String mFrom;
+    private String mTo;
+
 
     public LanguageSelectView(Context context) {
         super(context);
@@ -60,18 +62,43 @@ public class LanguageSelectView extends LinearLayout {
     }
 
     private void initAdapters() {
-        ArrayAdapter<String> adapterFrom = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, supportedLanguages);
+        ArrayAdapter<String> adapterFrom = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, supportedLanguages);
         adapterFrom.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mFromSpinner.setAdapter(adapterFrom);
-        //todo another adapter?
+        //todo another adapter? yes need 2 adapters with two lists of languages
         mToSpinner.setAdapter(adapterFrom);
+        setOnItemClickListeners();
     }
 
-    public void setOnItemClickListeners(AdapterView.OnItemSelectedListener listenerFrom,
-                                        AdapterView.OnItemSelectedListener listenerTo) {
-        this.listenerFrom = listenerFrom;
-        this.listenerTo = listenerTo;
-        mFromSpinner.setOnItemSelectedListener(this.listenerFrom);
-        mToSpinner.setOnItemSelectedListener(this.listenerTo);
+    private void setOnItemClickListeners() {
+        mFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mFrom = supportedLanguages.get(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mTo = supportedLanguages.get(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public String getFrom() {
+        return mFrom;
+    }
+
+    public String getTo() {
+        return mTo;
     }
 }
