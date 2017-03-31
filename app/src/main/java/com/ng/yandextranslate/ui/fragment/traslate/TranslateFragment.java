@@ -32,8 +32,6 @@ import com.ng.yandextranslate.ui.view.LanguageSelectView;
 
 public class TranslateFragment extends BaseFragment implements TranslateContract.View {
 
-    @BindView(R.id.test_text_view)
-    TextView mTestTextView;
     @BindView(R.id.translate_language_select)
     LanguageSelectView mLanguageSelectView;
 
@@ -47,10 +45,11 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.translate_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
 
         ButterKnife.bind(this, rootView);
 
+        //todo mb App.getAppComponent.translateModulre(new TranslateModule(this).inject(this))
         DaggerTranslateComponent.builder()
                 .appComponent(App.getAppComponent())
                 .translateModule(new TranslateModule(this))

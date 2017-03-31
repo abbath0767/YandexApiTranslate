@@ -38,11 +38,12 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
     private ActionBarDrawerToggle mDrawerToggle;
     private String mTitle;
     private String mDrawerTitle;
+    private DrawerFragmentEnum currentFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
@@ -52,6 +53,9 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerToggle.syncState();
+
+        setFragment(DrawerFragmentEnum.TRANSLATION.getDeclaredPosition());
+        currentFragment = DrawerFragmentEnum.TRANSLATION;
     }
 
     private void initDrawer() {
@@ -84,9 +88,14 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
 
     @Override
     public void onDrawerItemClick(int position) {
+        mDrawerLayout.closeDrawer(mDrawerListView);
+
+        if (currentFragment.getDeclaredPosition() == position) {
+            return;
+        }
+
         setFragment(position);
         setDrawerActivePosition(position);
-        mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
     void setFragment(int drawerPosition) {
