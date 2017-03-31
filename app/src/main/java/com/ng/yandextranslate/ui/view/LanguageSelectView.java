@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.model.pojo.LanguagePair;
 
 /**
  * Created by NG on 19.03.17.
@@ -31,6 +32,7 @@ public class LanguageSelectView extends LinearLayout {
     Spinner mToSpinner;
 
     private List<String> supportedLanguages;
+    private List<String> supportedLangDirs;
     private String mFrom;
     private String mTo;
 
@@ -56,8 +58,9 @@ public class LanguageSelectView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    public void setLanguages(List<String> supportedLanguages) {
+    public void setLanguages(List<String> supportedLanguages, List<String> supportedLangDirs) {
         this.supportedLanguages = supportedLanguages;
+        this.supportedLangDirs = supportedLangDirs;
         initAdapters();
     }
 
@@ -100,5 +103,10 @@ public class LanguageSelectView extends LinearLayout {
 
     public String getTo() {
         return mTo;
+    }
+
+    public LanguagePair getLanguagePair() {
+        //BUG THIS TODO
+        return new LanguagePair(getFrom(), getTo());
     }
 }

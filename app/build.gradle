@@ -36,6 +36,7 @@ ext {
     rxJava = '1.1.6'
     rxAdapter = '2.0.2'
     dagger = '2.9'
+    okhttp = '3.6.0'
 }
 
 dependencies {
@@ -52,7 +53,8 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     //OkHttp
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile "com.squareup.okhttp3:okhttp:$okhttp"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
     compile 'com.squareup.okio:okio:1.7.0'
     //Gson
     compile "com.google.code.gson:gson:$gsonVersion"

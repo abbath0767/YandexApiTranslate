@@ -1,4 +1,4 @@
-package com.ng.yandextranslate.model.pojo.support;
+package com.ng.yandextranslate.controller.network.data;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by NG on 19.03.17.
  */
 
-public class LanguageList {
+public class LanguageListResponse {
 
     @SerializedName("dirs")
     List<String> listDirs;

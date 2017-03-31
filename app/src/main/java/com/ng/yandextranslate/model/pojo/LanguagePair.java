@@ -19,6 +19,10 @@ public class LanguagePair {
         this.languageTo = languageTo;
     }
 
+    public String getLangPair() {
+        return languageFrom + "-" + languageTo;
+    }
+
     public String getLanguageFrom() {
         return languageFrom;
     }

@@ -1,6 +1,7 @@
 package com.ng.yandextranslate.controller.network;
 
-import com.ng.yandextranslate.model.pojo.support.LanguageList;
+import com.ng.yandextranslate.controller.network.data.LanguageListResponse;
+import com.ng.yandextranslate.model.pojo.support.TranslateResponse;
 
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -19,6 +20,12 @@ public interface YandexTranslateApi {
     public static final String API_STRING = "key=" + API_KEY;
 
     @POST("api/v1.5/tr.json/getLangs?" + API_STRING)
-    Observable<LanguageList> loadSupportedLangList(@Query("ui") String languageKey);
+    Observable<LanguageListResponse> loadSupportedLangList(@Query("ui") String languageKey);
+
+    @POST("api/v1.5/tr.json/translate?" + API_STRING)
+    Observable<TranslateResponse> loadTranslate(@Query("text") String text);
+
+    @POST("api/v1.5/tr.json/translate?" + API_STRING)
+    Observable<TranslateResponse> loadTranslateLang(@Query("text") String text, @Query("lang") String lang);
 
 }

@@ -23,4 +23,10 @@
         android:gravity="top|left"
         android:hint="@string/enter_word" />
 
+    <TextView
+        android:id="@+id/translate_text_view_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
 </LinearLayout>
