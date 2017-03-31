@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <ng.com.yandextranslate.ui.view.LanguageSelectView
+    <com.ng.yandextranslate.ui.view.LanguageSelectView
         android:id="@+id/translate_language_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
