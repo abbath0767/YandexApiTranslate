@@ -9,17 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
@@ -35,7 +32,7 @@ import rx.schedulers.Schedulers;
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.model.pojo.support.TranslateResponse;
+import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 import com.ng.yandextranslate.presentation.contract.translate.TranslateContract;
 import com.ng.yandextranslate.presentation.implementation.translate.DaggerTranslateComponent;
 import com.ng.yandextranslate.presentation.implementation.translate.TranslateModule;
@@ -153,7 +150,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
                 mEditTextIn.addTextChangedListener(textWatcher);
             }
-        }).debounce(3, TimeUnit.SECONDS);
+        }).debounce(100, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -161,21 +158,22 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         Log.d("TAG", "T.FRAGMENT. supportLangDirs: " + Arrays.toString(supportLangDirs.toArray()));
 
         List<String> list = new ArrayList<>();
+        List<String> keyList = new ArrayList<>();
         for (Map.Entry<String, String> entry : supportedLangs.entrySet()) {
-            Log.d("TAG", "map entry, key: " + entry.getKey() + ", value: " + entry.getValue());
-
+            keyList.add(entry.getKey());
             list.add(entry.getValue());
         }
-        mLanguageSelectView.setLanguages(list, supportLangDirs);
+
+        mLanguageSelectView.setLanguages(supportedLangs, supportLangDirs);
     }
 
     @Override
-    public String getFrom() {
+    public LanguageTranscript getFrom() {
         return mLanguageSelectView.getFrom();
     }
 
     @Override
-    public String getTo() {
+    public LanguageTranscript getTo() {
         return mLanguageSelectView.getTo();
     }
 
@@ -185,6 +183,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
     @Override
     public void showTranslateResult(String message) {
+        mTextViewOut.setText(message);
     }
 
     @Override

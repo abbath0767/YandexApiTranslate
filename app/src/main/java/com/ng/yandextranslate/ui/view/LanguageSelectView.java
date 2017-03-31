@@ -2,6 +2,7 @@ package com.ng.yandextranslate.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -9,12 +10,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
+import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 
 /**
  * Created by NG on 19.03.17.
@@ -32,9 +36,10 @@ public class LanguageSelectView extends LinearLayout {
     Spinner mToSpinner;
 
     private List<String> supportedLanguages;
-    private List<String> supportedLangDirs;
-    private String mFrom;
-    private String mTo;
+    private List<LanguageTranscript> transcriptList;
+    private List<LanguagePair> languagePairList;
+    private LanguageTranscript mFrom;
+    private LanguageTranscript mTo;
 
 
     public LanguageSelectView(Context context) {
@@ -50,6 +55,9 @@ public class LanguageSelectView extends LinearLayout {
     private void initView(Context context) {
         this.context = context;
         inflate(context, R.layout.view_language_select, this);
+        languagePairList = new ArrayList<>();
+        transcriptList = new ArrayList<>();
+        supportedLanguages = new ArrayList<>();
     }
 
     @Override
@@ -58,9 +66,16 @@ public class LanguageSelectView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    public void setLanguages(List<String> supportedLanguages, List<String> supportedLangDirs) {
-        this.supportedLanguages = supportedLanguages;
-        this.supportedLangDirs = supportedLangDirs;
+    public void setLanguages(Map<String, String> langs, List<String> supportedLangDirs) {
+        for (String lang: supportedLangDirs) {
+            languagePairList.add(new LanguagePair(lang));
+        }
+
+        for (Map.Entry<String, String> entry: langs.entrySet()) {
+            transcriptList.add(new LanguageTranscript(entry.getValue(), entry.getKey()));
+            supportedLanguages.add(entry.getValue());
+        }
+
         initAdapters();
     }
 
@@ -77,7 +92,7 @@ public class LanguageSelectView extends LinearLayout {
         mFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mFrom = supportedLanguages.get(position);
+                mFrom = transcriptList.get(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -88,7 +103,7 @@ public class LanguageSelectView extends LinearLayout {
         mToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mTo = supportedLanguages.get(position);
+                mTo = transcriptList.get(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -97,16 +112,16 @@ public class LanguageSelectView extends LinearLayout {
         });
     }
 
-    public String getFrom() {
+    public LanguageTranscript getFrom() {
         return mFrom;
     }
 
-    public String getTo() {
+    public LanguageTranscript getTo() {
         return mTo;
     }
 
     public LanguagePair getLanguagePair() {
         //BUG THIS TODO
-        return new LanguagePair(getFrom(), getTo());
+        return new LanguagePair(mFrom.getTranscript(), mTo.getTranscript());
     }
 }

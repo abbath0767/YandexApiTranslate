@@ -11,15 +11,10 @@ import com.ng.yandextranslate.controller.data.RepositoryService;
 import com.ng.yandextranslate.controller.network.RequestHelper;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.model.pojo.support.TranslateResponse;
 import com.ng.yandextranslate.presentation.contract.translate.TranslateContract;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by NGusarov on 17/03/17.
@@ -66,7 +61,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                 },
                 error -> {
                     //todo need error processing to view
-                    Log.d("TAG", "ERROR! ");
+                    Log.d("TAG", "ERROR IMPL LOAD SUPP LANG! ");
                     error.printStackTrace();
                 }
         );
@@ -103,11 +98,9 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
             public void call(Subscriber<? super String> subscriber) {
                 RequestHelper.asyncRequest(mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPair()),
                         data -> {
-                            Log.d("TAG", "ASYNC. GET DATA");
-                            subscriber.onNext(data.getLang());
+                            subscriber.onNext(data.getText().get(0));
                         },
                         error -> {
-                            Log.d("TAG", "ERROR");
                             subscriber.onError(error);
                         }
                 );

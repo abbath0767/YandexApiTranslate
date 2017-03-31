@@ -1,7 +1,7 @@
 package com.ng.yandextranslate.controller.network;
 
 import com.ng.yandextranslate.controller.network.data.LanguageListResponse;
-import com.ng.yandextranslate.model.pojo.support.TranslateResponse;
+import com.ng.yandextranslate.controller.network.data.TranslateResponse;
 
 import retrofit2.http.POST;
 import retrofit2.http.Query;

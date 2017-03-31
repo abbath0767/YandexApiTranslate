@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.model.pojo.support.TranslateResponse;
+import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 
 import rx.Observable;
 
@@ -19,8 +19,8 @@ public interface TranslateContract {
         void setDefaultLanguages(LanguagePair languagePair);
         void setLanguages(Map<String, String> supportedLangs, List<String> supportedLangDirs);
 
-        String getFrom();
-        String getTo();
+        LanguageTranscript getFrom();
+        LanguageTranscript getTo();
     }
 
     interface Presenter {

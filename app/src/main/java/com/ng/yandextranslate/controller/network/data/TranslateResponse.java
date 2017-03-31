@@ -1,6 +1,8 @@
-package com.ng.yandextranslate.model.pojo.support;
+package com.ng.yandextranslate.controller.network.data;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created by NG on 31.03.17.
@@ -14,30 +16,18 @@ public class TranslateResponse {
     String lang;
 
     @SerializedName("text")
-    String text;
+    List<String> text;
 
     public int getCode() {
         return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
     }
 
     public String getLang() {
         return lang;
     }
 
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
-    public String getText() {
+    public List<String> getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     @Override
