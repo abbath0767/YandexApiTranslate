@@ -20,16 +20,12 @@ public class HistoryPresenterImpl implements HistoryContract.Presenter {
     HistoryContract.View mView;
     HistoryDataService mHistoryDataService;
 
+    private List<HistoryData> historyDataList;
+
     @Inject
     public HistoryPresenterImpl(HistoryContract.View view, HistoryDataService historyDataService) {
         this.mView = view;
         this.mHistoryDataService = historyDataService;
-        initAndShowHistory();
-    }
-
-    private void initAndShowHistory() {
-        //init history
-        //show history
     }
 
     @Override

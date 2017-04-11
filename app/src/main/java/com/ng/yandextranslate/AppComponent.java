@@ -22,5 +22,5 @@ import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 public interface AppComponent {
     YandexTranslateApi yandexApi();
     Repository repository();
-    HistoryDataService mHistoryDataService();
+    HistoryDataService historyDataService();
 }

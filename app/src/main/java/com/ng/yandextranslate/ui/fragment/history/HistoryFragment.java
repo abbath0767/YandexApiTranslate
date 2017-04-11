@@ -3,21 +3,23 @@ package com.ng.yandextranslate.ui.fragment.history;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
-import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.implementation.history.DaggerHistoryComponent;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryModule;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
+import com.ng.yandextranslate.ui.HistoryRecyclerViewAdapter;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
 
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,18 +32,23 @@ import butterknife.ButterKnife;
 
 public class HistoryFragment extends BaseFragment implements HistoryContract.View {
 
-    @BindView(R.id.HELLO)
-    TextView hellotextView;
+    @BindView(R.id.history_recycler_view)
+    RecyclerView mRecycler;
 
     @Inject
     HistoryPresenterImpl mPresenter;
 
-    public static Fragment newInstance(Bundle args) {
+    public static Fragment newInstance(@Nullable Bundle args) {
         HistoryFragment fragment = new HistoryFragment();
         return fragment;
     }
 
-    @Nullable
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
@@ -53,17 +60,20 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 .historyModule(new HistoryModule(this))
                 .build().inject(this);
 
-        //todo for test
-        List<HistoryData> testList = mPresenter.getHistory();
-        StringBuilder sb = new StringBuilder("LIST: ");
-        for (HistoryData historyData: testList) {
-            sb.append(historyData.getOriginalText() + " - " + historyData.getTranslateText()
-                    + " " + historyData.getLanguagePair().getLangPairStringValue() + "\n");
-        }
-
-        hellotextView.setText(sb.toString().trim());
+        initRecyclerView();
 
         return rootView;
     }
 
+
+    public void initRecyclerView() {
+        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecycler.setAdapter(new HistoryRecyclerViewAdapter(mPresenter.getHistory()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }
