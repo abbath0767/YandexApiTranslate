@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.controller.data.service.languages.TranslateDataService;
 import com.ng.yandextranslate.controller.network.RequestHelper;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
@@ -21,9 +22,11 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     public static final String TAG = TranslatePresenterImpl.class.getSimpleName();
 
-    TranslateContract.View mView;
-    YandexTranslateApi mYandexTranslateApi;
-    TranslateDataService mTranslateDataService;
+    private TranslateContract.View mView;
+    private YandexTranslateApi mYandexTranslateApi;
+    private TranslateDataService mTranslateDataService;
+    private HistoryDataService mHistoryDataServise;
+
 
     private Map<String, String> supportedLangs;
     private List<String> supportedLangDirs;
@@ -34,10 +37,12 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     @Inject
     public TranslatePresenterImpl(YandexTranslateApi api,
                                   TranslateDataService repositoryService,
+                                  HistoryDataService historyDataService,
                                   TranslateContract.View view) {
         this.mView = view;
         this.mYandexTranslateApi = api;
         this.mTranslateDataService = repositoryService;
+        this.mHistoryDataServise = historyDataService;
         setSupportLanguages();
     }
 
@@ -84,20 +89,16 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     }
 
     @Override
-    public void saveToHistory() {
-        //todo save to repo
-    }
-
-    @Override
     public void getTranslate(String message, LanguagePair langPair) {
         Log.d(TAG, "GET TRANSLATE FOR MESSAGE: " + message);
-        Log.d(TAG, "GET LANG: " + langPair.getLangPair());
+        Log.d(TAG, "GET LANG: " + langPair.getLangPairStringValue());
 
         mView.showProgressBar();
-        RequestHelper.asyncRequest(mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPair()),
+        RequestHelper.asyncRequest(mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPairStringValue()),
                 data -> {
                     mView.showTranslateResult(data.getResponseText());
                     mView.dismissProgressBar();
+                    mHistoryDataServise.addHistoryData(message, data.getResponseText(), langPair);
                 },
                 error -> {
                     //todo add error logic

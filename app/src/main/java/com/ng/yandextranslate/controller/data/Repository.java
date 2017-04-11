@@ -1,5 +1,7 @@
 package com.ng.yandextranslate.controller.data;
 
+import com.ng.yandextranslate.model.pojo.HistoryData;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,4 +11,19 @@ import java.util.Map;
 
 public interface Repository {
 
+    void open();
+
+    void close();
+
+    void addHistory(HistoryData data);
+
+    List<HistoryData> getAllHistories();
+
+    List<HistoryData> getFavoriteHistories();
+
+    void deleteHistoryData(int id);
+
+    void deleteAllHistoryData();
+
+    long getDataCount(String tableName);
 }

@@ -19,7 +19,7 @@ public class LanguagePair {
         this.languageTo = languageTo;
     }
 
-    public String getLangPair() {
+    public String getLangPairStringValue() {
         return languageFrom + "-" + languageTo;
     }
 
@@ -29,5 +29,13 @@ public class LanguagePair {
 
     public String getLanguageTo() {
         return languageTo;
+    }
+
+    @Override
+    public String toString() {
+        return "LanguagePair{" +
+                "languageFrom='" + languageFrom + '\'' +
+                ", languageTo='" + languageTo + '\'' +
+                '}';
     }
 }

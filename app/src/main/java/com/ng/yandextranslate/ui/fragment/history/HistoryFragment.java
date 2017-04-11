@@ -6,17 +6,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.implementation.history.DaggerHistoryComponent;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryModule;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -25,6 +30,8 @@ import butterknife.ButterKnife;
 
 public class HistoryFragment extends BaseFragment implements HistoryContract.View {
 
+    @BindView(R.id.HELLO)
+    TextView hellotextView;
 
     @Inject
     HistoryPresenterImpl mPresenter;
@@ -46,21 +53,17 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 .historyModule(new HistoryModule(this))
                 .build().inject(this);
 
+        //todo for test
+        List<HistoryData> testList = mPresenter.getHistory();
+        StringBuilder sb = new StringBuilder("LIST: ");
+        for (HistoryData historyData: testList) {
+            sb.append(historyData.getOriginalText() + " - " + historyData.getTranslateText()
+                    + " " + historyData.getLanguagePair().getLangPairStringValue() + "\n");
+        }
+
+        hellotextView.setText(sb.toString().trim());
+
         return rootView;
     }
 
-    @Override
-    public void showProgressBar() {
-
-    }
-
-    @Override
-    public void dismissProgressBar() {
-
-    }
-
-    @Override
-    public void showError(String errorMessage) {
-
-    }
 }

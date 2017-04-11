@@ -13,8 +13,6 @@ import java.util.Map;
 public interface BaseContract {
 
     interface BaseView {
-        void showProgressBar();
-        void dismissProgressBar();
         void showError(String errorMessage);
     }
 

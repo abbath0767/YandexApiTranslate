@@ -1,5 +1,8 @@
 package com.ng.yandextranslate.presentation.contract.translate;
 
+import android.util.Log;
+import android.view.View;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +26,13 @@ public interface TranslateContract extends BaseContract {
         LanguageTranscript getFrom();
         LanguageTranscript getTo();
 
+        void showProgressBar();
+        void dismissProgressBar();
+
         void showDialog(String message);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
-        void saveToHistory();
         void getTranslate(String message, LanguagePair languagePair);
     }
 }

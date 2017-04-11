@@ -142,12 +142,6 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     }
 
     @Override
-    public void showError(String errorMessage) {
-        Log.d(TAG, "showError: " + errorMessage);
-        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void setLanguages(Map<String, String> supportedLangs, List<String> supportLangDirs) {
         Log.d(TAG, "setLanguages. supportLangDirs: " + Arrays.toString(supportLangDirs.toArray()));
 

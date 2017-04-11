@@ -13,8 +13,7 @@ public class HistoryShema {
             public static final String ID = "id";
             public static final String TEXT_FROM = "text_from";
             public static final String TEXT_TO = "text_to";
-            public static final String LANG_FROM = "lang_from";
-            public static final String LANG_TO = "lang_to";
+            public static final String PAIR = "lang_pair";
             public static final String TIME = "time";
             public static final String FAVORITE = "favorite";
         }

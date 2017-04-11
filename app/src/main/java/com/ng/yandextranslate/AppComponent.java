@@ -7,6 +7,7 @@ import dagger.Component;
 import com.ng.yandextranslate.controller.data.Repository;
 import com.ng.yandextranslate.controller.data.RepositoryModule;
 import com.ng.yandextranslate.controller.data.service.history.HistoryDataModule;
+import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.controller.network.NetworkModule;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 
@@ -21,4 +22,5 @@ import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 public interface AppComponent {
     YandexTranslateApi yandexApi();
     Repository repository();
+    HistoryDataService mHistoryDataService();
 }
