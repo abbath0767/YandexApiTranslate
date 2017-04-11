@@ -2,7 +2,6 @@ package com.ng.yandextranslate.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,7 +28,7 @@ public class LanguageSelectView extends LinearLayout {
     private Context context;
 
     @BindView(R.id.language_select_swap_button)
-    ImageButton mRefreshImageButton;
+    ImageButton mSwapImageButton;
     @BindView(R.id.language_select_spinner_from)
     Spinner mFromSpinner;
     @BindView(R.id.language_select_spinner_to)

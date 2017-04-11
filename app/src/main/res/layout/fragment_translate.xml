@@ -38,10 +38,14 @@
             android:id="@+id/translate_progress_for_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/translate_text_view_out"
-            android:layout_alignBottom="@id/translate_text_view_out"
-            android:layout_alignRight="@id/translate_text_view_out"
+            android:layout_centerHorizontal="true"
             android:visibility="gone"/>
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center|bottom"
+        android:layout_gravity="center"
+        android:text="@string/license" />
 </LinearLayout>

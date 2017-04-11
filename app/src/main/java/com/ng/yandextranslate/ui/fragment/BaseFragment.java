@@ -10,6 +10,4 @@ import com.ng.yandextranslate.presentation.contract.BaseContract;
 
 public abstract class BaseFragment extends Fragment implements BaseContract.BaseView {
 
-
-
 }

@@ -8,15 +8,15 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by NGusarov on 17/03/17.
+ * Created by NG on 11.04.17.
  */
 
 @Module
-public class DataModule {
+public class RepositoryModule {
 
-    @Singleton
     @Provides
-    RepositoryService provideRepository(Context context) {
-        return new RepositoryServiceImplDumb(context);
+    @Singleton
+    Repository provideRepository(Context context) {
+        return new RepositorySQLiteIml(context);
     }
 }

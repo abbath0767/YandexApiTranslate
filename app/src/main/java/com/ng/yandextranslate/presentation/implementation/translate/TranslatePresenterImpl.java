@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.ng.yandextranslate.controller.data.RepositoryService;
+import com.ng.yandextranslate.controller.data.service.languages.TranslateDataService;
 import com.ng.yandextranslate.controller.network.RequestHelper;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
@@ -23,7 +23,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     TranslateContract.View mView;
     YandexTranslateApi mYandexTranslateApi;
-    RepositoryService mRepositoryService;
+    TranslateDataService mTranslateDataService;
 
     private Map<String, String> supportedLangs;
     private List<String> supportedLangDirs;
@@ -33,17 +33,17 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     @Inject
     public TranslatePresenterImpl(YandexTranslateApi api,
-                                  RepositoryService repositoryService,
+                                  TranslateDataService repositoryService,
                                   TranslateContract.View view) {
         this.mView = view;
         this.mYandexTranslateApi = api;
-        this.mRepositoryService = repositoryService;
+        this.mTranslateDataService = repositoryService;
         setSupportLanguages();
     }
 
     private void setSupportLanguages() {
-        supportedLangs = mRepositoryService.getLanguages();
-        supportedLangDirs = mRepositoryService.getLanguagesDirs();
+        supportedLangs = mTranslateDataService.getLanguages();
+        supportedLangDirs = mTranslateDataService.getLanguagesDirs();
 
         if (supportedLangs != null && supportedLangs.size() != 0 &&
                 supportedLangDirs != null && supportedLangDirs.size() != 0) {
@@ -68,10 +68,12 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     private void compareSupportLanguages(Map<String, String> supportedLangs, List<String> supportedLangDirs) {
         if (!this.supportedLangs.equals(supportedLangs)) {
-            mRepositoryService.saveNewSupportLangs(supportedLangs);
+            Log.d(TAG, "compareSupportLanguages. supportedLangs not equals old");
+            mTranslateDataService.saveNewSupportLangs(supportedLangs);
         }
         if (!this.supportedLangDirs.equals(supportedLangDirs)) {
-            mRepositoryService.saveNewSupportLangsDirs(supportedLangDirs);
+            Log.d(TAG, "compareSupportLanguages. supportedLangsDirs not equals old");
+            mTranslateDataService.saveNewSupportLangsDirs(supportedLangDirs);
         }
 
         setSupportLangToView(supportedLangs, supportedLangDirs);

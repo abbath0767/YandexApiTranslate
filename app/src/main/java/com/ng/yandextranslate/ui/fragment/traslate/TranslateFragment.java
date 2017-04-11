@@ -88,7 +88,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                         }
                     }
 
-                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void afterTextChanged(final Editable s) {

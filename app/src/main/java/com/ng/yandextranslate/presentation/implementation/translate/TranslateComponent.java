@@ -2,6 +2,7 @@ package com.ng.yandextranslate.presentation.implementation.translate;
 
 import dagger.Component;
 import com.ng.yandextranslate.AppComponent;
+import com.ng.yandextranslate.controller.data.service.languages.TranslateDataModule;
 import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
 
 /**
@@ -9,7 +10,8 @@ import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
  */
 
 @TranslateScope
-@Component(dependencies = AppComponent.class, modules = TranslateModule.class)
+@Component(dependencies = AppComponent.class,
+            modules = {TranslateModule.class, TranslateDataModule.class})
 public interface TranslateComponent {
     void inject(TranslateFragment fragment);
 }

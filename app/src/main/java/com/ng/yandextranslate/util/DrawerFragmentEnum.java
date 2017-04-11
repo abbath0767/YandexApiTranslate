@@ -7,7 +7,8 @@ package com.ng.yandextranslate.util;
 public enum DrawerFragmentEnum {
     TRANSLATION(0),
     HISTORY(1),
-    ABOUT(2);
+    FAVOURITES(2),
+    ABOUT(3);
 
     private final int position;
 

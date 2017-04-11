@@ -9,6 +9,7 @@
     <string-array name="drawer_items">
         <item>Перевод</item>
         <item>История</item>
+        <item>Избранное</item>
         <item>О приложении</item>
     </string-array>
 

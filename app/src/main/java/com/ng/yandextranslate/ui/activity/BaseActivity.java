@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
 import com.ng.yandextranslate.util.DrawerFragmentEnum;
 import com.ng.yandextranslate.util.DrawerItemClickListener;
@@ -26,6 +28,8 @@ import com.ng.yandextranslate.util.DrawerItemClickListener;
  */
 
 public class BaseActivity extends AppCompatActivity implements DrawerItemClickListener.OnDrawerItemClickListener {
+
+    public static final String TAG = BaseActivity.class.getSimpleName();
 
     //ActionBar and Drawer
     @BindView(R.id.drawer_layout)
@@ -94,21 +98,28 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
             return;
         }
 
+        Log.d(TAG, "onDrawerClick. drawerPosition: " + position);
+
         setFragment(position);
         setDrawerActivePosition(position);
     }
 
     void setFragment(int drawerPosition) {
-        DrawerFragmentEnum enumElement = DrawerFragmentEnum.values()[drawerPosition];
+//        DrawerFragmentEnum enumElement = DrawerFragmentEnum.values()[drawerPosition];
+        currentFragment = DrawerFragmentEnum.values()[drawerPosition];
         Fragment fragment = null;
 
-        switch (enumElement) {
+        switch (currentFragment) {
             case TRANSLATION: {
                 fragment = getTranslateFragment();
                 break;
             }
             case HISTORY: {
-                //todo history
+                fragment = getHistoryFragment();
+                break;
+            }
+            case FAVOURITES: {
+                //todo favourites
                 break;
             }
             case ABOUT: {
@@ -138,6 +149,10 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
     private Fragment getTranslateFragment() {
         //todo mb change this?
         return TranslateFragment.newInstance(null);
+    }
+
+    private Fragment getHistoryFragment() {
+        return HistoryFragment.newInstance(null);
     }
 
     @Override
