@@ -4,30 +4,28 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
@@ -46,12 +44,18 @@ import com.ng.yandextranslate.ui.view.LanguageSelectView;
 
 public class TranslateFragment extends BaseFragment implements TranslateContract.View {
 
+    private static final String TAG = TranslateFragment.class.getSimpleName();
+
+    private static final long DELAY_BEFORE_POST = 1000;
+
     @BindView(R.id.translate_language_select)
     LanguageSelectView mLanguageSelectView;
     @BindView(R.id.translate_edit_text_in)
     EditText mEditTextIn;
     @BindView(R.id.translate_text_view_out)
     TextView mTextViewOut;
+    @BindView(R.id.translate_progress_for_text)
+    ProgressBar mProgressBar;
 
     @Inject
     TranslatePresenterImpl mPresenter;
@@ -73,89 +77,79 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 .translateModule(new TranslateModule(this))
                 .build().inject(this);
 
-        //remove rx
-        createTextChangeObservable()
-                .observeOn(Schedulers.io())
-                .doOnNext(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        showProgressBar();
+
+        mEditTextIn.addTextChangedListener(
+                new TextWatcher() {
+                    private Timer timer=new Timer();
+
+                    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
                     }
-                })
-//                .map(new Func1<String, String>() {
-//                    @Override
-//                    public String call(String s) {
-//                        return mPresenter.getTranslate(s, getCurrentLanguagePair());
-//                    }
-//                })
-                .flatMap(new Func1<String, Observable<String>>() {
+
+                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
                     @Override
-                    public Observable<String> call(String s) {
-                        Log.d("TAG", "FLAT MAP");
-                        return mPresenter.getTranslate(s, getCurrentLanguagePair());
+                    public void afterTextChanged(final Editable s) {
+                        timer.cancel();
+                        timer = new Timer();
+                        timer.schedule(
+                                new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if (!TextUtils.isEmpty(s.toString())) {
+                                            mPresenter.getTranslate(s.toString(), getCurrentLanguagePair());
+                                        }
+                                    }
+                                },
+                                DELAY_BEFORE_POST
+                        );
                     }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        Log.d("TAG", "ACTION AFTER");
-                        hideProgressBar();
-                        showResult(s);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.d("TAG", "ERROR: " + throwable.getMessage());
-                        throwable.printStackTrace();
-                    }
-                });
+                }
+        );
 
         return rootView;
     }
 
-    private void showResult(String s) {
-        mTextViewOut.setText(s);
+    public void showDialog(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void showProgressBar() {
-        //todo show bar
-        Log.d("TAG", "SHOW PROGRESS");
-    }
-
-    private void hideProgressBar() {
-        //todo hide progress
-        Log.d("TAG", "HIDE PROGRESS");
-    }
-
-    private Observable<String> createTextChangeObservable() {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+    //todo change textView and progressBar to one custom view
+    @Override
+    public void showProgressBar() {
+        Log.d(TAG, "showProgressBar");
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void call(final Subscriber<? super String> subscriber) {
-
-                final TextWatcher textWatcher = new TextWatcher() {
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        subscriber.onNext(s.toString());
-                    }
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        //do nothing
-                    }
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        //do nothing
-                    }
-                };
-
-                mEditTextIn.addTextChangedListener(textWatcher);
+            public void run() {
+                mTextViewOut.setVisibility(View.INVISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
             }
-        }).debounce(100, TimeUnit.MILLISECONDS);
+        });
+    }
+
+    @Override
+    public void dismissProgressBar() {
+        Log.d(TAG, "dismissProgressBar");
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mTextViewOut.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        Log.d(TAG, "showError: " + errorMessage);
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void setLanguages(Map<String, String> supportedLangs, List<String> supportLangDirs) {
-        Log.d("TAG", "T.FRAGMENT. supportLangDirs: " + Arrays.toString(supportLangDirs.toArray()));
+        Log.d(TAG, "setLanguages. supportLangDirs: " + Arrays.toString(supportLangDirs.toArray()));
 
         List<String> list = new ArrayList<>();
         List<String> keyList = new ArrayList<>();

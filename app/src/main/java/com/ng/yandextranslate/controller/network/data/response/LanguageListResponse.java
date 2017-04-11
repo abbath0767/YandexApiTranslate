@@ -1,4 +1,4 @@
-package com.ng.yandextranslate.controller.network.data;
+package com.ng.yandextranslate.controller.network.data.response;
 
 import com.google.gson.annotations.SerializedName;
 

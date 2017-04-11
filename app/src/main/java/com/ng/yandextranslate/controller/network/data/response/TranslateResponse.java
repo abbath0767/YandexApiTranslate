@@ -1,4 +1,4 @@
-package com.ng.yandextranslate.controller.network.data;
+package com.ng.yandextranslate.controller.network.data.response;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -30,12 +30,14 @@ public class TranslateResponse {
         return text;
     }
 
+    public String getResponseText() { return getText().get(0);}
+
     @Override
     public String toString() {
         return "TranslateResponse{" +
                 "code=" + code +
                 ", lang='" + lang + '\'' +
-                ", text='" + text + '\'' +
+                ", text='" + text.get(0) + '\'' +
                 '}';
     }
 }

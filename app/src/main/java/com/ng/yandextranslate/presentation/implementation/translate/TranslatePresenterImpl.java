@@ -13,14 +13,13 @@ import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
 import com.ng.yandextranslate.presentation.contract.translate.TranslateContract;
 
-import rx.Observable;
-import rx.Subscriber;
-
 /**
  * Created by NGusarov on 17/03/17.
  */
 
 public class TranslatePresenterImpl implements TranslateContract.Presenter {
+
+    public static final String TAG = TranslatePresenterImpl.class.getSimpleName();
 
     TranslateContract.View mView;
     YandexTranslateApi mYandexTranslateApi;
@@ -61,7 +60,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                 },
                 error -> {
                     //todo need error processing to view
-                    Log.d("TAG", "ERROR IMPL LOAD SUPP LANG! ");
+                    Log.d(TAG, "ERROR IMPL LOAD SUPP LANG! ");
                     error.printStackTrace();
                 }
         );
@@ -87,34 +86,20 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
         //todo save to repo
     }
 
-    //todo refactor
     @Override
-    public Observable<String> getTranslate(String message, LanguagePair langPair) {
-        Log.d("TAG", "GET TRANSLATE");
-        Log.d("TAG", "GET LANG: " + langPair.getLangPair());
+    public void getTranslate(String message, LanguagePair langPair) {
+        Log.d(TAG, "GET TRANSLATE FOR MESSAGE: " + message);
+        Log.d(TAG, "GET LANG: " + langPair.getLangPair());
 
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                RequestHelper.asyncRequest(mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPair()),
-                        data -> {
-                            subscriber.onNext(data.getText().get(0));
-                        },
-                        error -> {
-                            subscriber.onError(error);
-                        }
-                );
-//                mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPair())
-//                        .doOnNext(new Action1<TranslateResponse>() {
-//                            @Override
-//                            public void call(TranslateResponse translateResponse) {
-//                                subscriber.onNext(translateResponse.getText());
-//                            }
-//                        })
-//                        .observeOn(Schedulers.io())
-//                        .subscribeOn(AndroidSchedulers.mainThread());
-            }
-        });
-
+        mView.showProgressBar();
+        RequestHelper.asyncRequest(mYandexTranslateApi.loadTranslateLang(message, langPair.getLangPair()),
+                data -> {
+                    mView.showTranslateResult(data.getResponseText());
+                    mView.dismissProgressBar();
+                },
+                error -> {
+                    //todo add error logic
+                    mView.showError(error.getMessage());
+                });
     }
 }

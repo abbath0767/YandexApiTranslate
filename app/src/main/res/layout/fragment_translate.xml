@@ -8,26 +8,40 @@
     <com.ng.yandextranslate.ui.view.LanguageSelectView
         android:id="@+id/translate_language_select"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/translate_edit_text_in"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="128dp"
-        android:padding="5dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/edit_text_background"
         android:gravity="top|left"
-        android:hint="@string/enter_word" />
+        android:hint="@string/enter_word"
+        android:padding="5dp" />
 
-    <TextView
-        android:id="@+id/translate_text_view_out"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="24dp"/>
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/translate_text_view_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="24sp" />
+        
+        <ProgressBar
+            android:id="@+id/translate_progress_for_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/translate_text_view_out"
+            android:layout_alignBottom="@id/translate_text_view_out"
+            android:layout_alignRight="@id/translate_text_view_out"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
 </LinearLayout>
