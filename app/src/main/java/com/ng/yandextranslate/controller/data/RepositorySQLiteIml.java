@@ -75,12 +75,12 @@ public class RepositorySQLiteIml implements Repository {
         Log.d(TAG, "getAllHistories");
 
         List<HistoryData> list = new LinkedList<>();
-        BaseCursorWrapper cursor = queryData(HistoryTable.NAME, null, null);
+        BaseCursorWrapper<HistoryData> cursor = queryData(HistoryTable.NAME, null, null);
 
         try {
             cursor.moveToFirst();
             while(!cursor.isAfterLast()) {
-                list.add((HistoryData) cursor.getData());
+                list.add(cursor.getData());
                 cursor.moveToNext();
             }
         } finally {
@@ -116,7 +116,25 @@ public class RepositorySQLiteIml implements Repository {
 
     @Override
     public List<HistoryData> getFavoriteHistories() {
-        return null;
+        Log.d(TAG, "getFavoriteHistories");
+
+        List<HistoryData> list = new LinkedList<>();
+        BaseCursorWrapper<HistoryData> cursor = queryData(HistoryTable.NAME, HistoryTable.Cols.FAVORITE + " = ?",
+                new String[] {String.valueOf(1)});
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                list.add(cursor.getData());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        Log.d(TAG, "return allFavoriteHistories. list size: " + list.size());
+
+        return list;
     }
 
     @Override

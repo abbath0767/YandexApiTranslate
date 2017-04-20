@@ -1,5 +1,6 @@
 package com.ng.yandextranslate.presentation.implementation.history;
 
+import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.contract.translate.TranslateContract;
 

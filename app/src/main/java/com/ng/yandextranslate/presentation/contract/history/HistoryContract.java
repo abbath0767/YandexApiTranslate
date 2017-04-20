@@ -19,5 +19,7 @@ public interface HistoryContract extends BaseContract {
         List<HistoryData> getHistory();
 
         void clearHistory();
+
+        void makeFavorite(int key, boolean isChecked);
     }
 }

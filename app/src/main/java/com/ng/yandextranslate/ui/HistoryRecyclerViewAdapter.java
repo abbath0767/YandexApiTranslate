@@ -14,6 +14,9 @@ import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
+import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
+import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
+import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 
 import java.util.List;
 
@@ -30,14 +33,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
 
-    @Inject
-    HistoryDataService mHistoryDataService;
+    HistoryPresenterImpl mPresenter;
 
     private List<HistoryData> list;
 
-    public HistoryRecyclerViewAdapter(List<HistoryData> list) {
-        this.list = list;
-        App.getAppComponent().inject(this);
+    @Inject
+    public HistoryRecyclerViewAdapter(HistoryPresenterImpl presenter) {
+        mPresenter = presenter;
+        this.list = mPresenter.getHistory();
     }
 
     @Override
@@ -59,7 +62,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.mFavoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                mHistoryDataService.makeFavorite(list.get(position).getKey(), isChecked);
+                mPresenter.makeFavorite(list.get(position).getKey(), isChecked);
             }
         });
     }

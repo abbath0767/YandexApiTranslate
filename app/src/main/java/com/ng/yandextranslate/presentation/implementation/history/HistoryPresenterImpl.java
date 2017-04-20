@@ -21,8 +21,6 @@ public class HistoryPresenterImpl implements HistoryContract.Presenter {
     HistoryContract.View mView;
     HistoryDataService mHistoryDataService;
 
-    private List<HistoryData> historyDataList;
-
     @Inject
     public HistoryPresenterImpl(HistoryContract.View view, HistoryDataService historyDataService) {
         this.mView = view;
@@ -43,6 +41,11 @@ public class HistoryPresenterImpl implements HistoryContract.Presenter {
     public void clearHistory() {
         mHistoryDataService.deleteAllHistoryData();
         showEmptyView();
+    }
+
+    @Override
+    public void makeFavorite(final int key, final boolean isChecked) {
+        mHistoryDataService.makeFavorite(key, isChecked);
     }
 
     private void showEmptyView() {

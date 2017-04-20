@@ -17,6 +17,7 @@ import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.implementation.history.DaggerHistoryComponent;
+import com.ng.yandextranslate.presentation.implementation.history.HistoryComponent;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryModule;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
 import com.ng.yandextranslate.ui.HistoryRecyclerViewAdapter;
@@ -41,6 +42,8 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     @Inject
     HistoryPresenterImpl mPresenter;
+    @Inject
+    HistoryRecyclerViewAdapter mHistoryRecyclerViewAdapter;
 
     public static Fragment newInstance(@Nullable Bundle args) {
         HistoryFragment fragment = new HistoryFragment();
@@ -71,7 +74,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     public void initRecyclerView() {
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecycler.setAdapter(new HistoryRecyclerViewAdapter(mPresenter.getHistory()));
+        mRecycler.setAdapter(mHistoryRecyclerViewAdapter);
     }
 
     @Override
