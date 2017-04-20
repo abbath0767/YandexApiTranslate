@@ -5,6 +5,7 @@
     <string name="open_drawer">Меню</string>
     <string name="close_drawer">что тут?</string>
     <string name="enter_word">Введите текст для перевода...</string>
+    <string name="no_data_available">История пустая</string>
 
     <string-array name="drawer_items">
         <item>Перевод</item>

@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
@@ -34,6 +36,8 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     @BindView(R.id.history_recycler_view)
     RecyclerView mRecycler;
+    @BindView(R.id.empty_view)
+    TextView mEmptyTextView;
 
     @Inject
     HistoryPresenterImpl mPresenter;
@@ -65,7 +69,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         return rootView;
     }
 
-
     public void initRecyclerView() {
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecycler.setAdapter(new HistoryRecyclerViewAdapter(mPresenter.getHistory()));
@@ -75,5 +78,23 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_clear_history: {
+                mPresenter.clearHistory();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void showEmptyView() {
+        mRecycler.setVisibility(View.GONE);
+        mEmptyTextView.setVisibility(View.VISIBLE);
     }
 }

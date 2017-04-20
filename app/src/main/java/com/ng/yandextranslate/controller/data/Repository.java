@@ -26,4 +26,6 @@ public interface Repository {
     void deleteAllHistoryData();
 
     long getDataCount(String tableName);
+
+    void makeHistoryFavorite(int id, boolean isFavorite);
 }

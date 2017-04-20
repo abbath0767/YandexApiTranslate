@@ -14,4 +14,25 @@ public abstract class BaseCursorWrapper<T> extends CursorWrapper {
     }
 
     public abstract T getData();
+
+    public static final class NullableCursorWrapper extends BaseCursorWrapper {
+
+        private static NullableCursorWrapper instance;
+
+        public static NullableCursorWrapper getInstance() {
+            if (instance == null) {
+                instance = new NullableCursorWrapper();
+            }
+            return instance;
+        }
+
+        private NullableCursorWrapper() {
+            super(null);
+        }
+
+        @Override
+        public String getData() {
+            return "NOT EXISTS A TABLE";
+        }
+    }
 }

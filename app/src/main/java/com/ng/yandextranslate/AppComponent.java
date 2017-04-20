@@ -23,4 +23,6 @@ public interface AppComponent {
     YandexTranslateApi yandexApi();
     Repository repository();
     HistoryDataService historyDataService();
+
+
 }

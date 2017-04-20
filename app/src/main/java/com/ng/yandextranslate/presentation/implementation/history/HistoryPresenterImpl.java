@@ -5,6 +5,7 @@ import com.ng.yandextranslate.controller.data.service.history.HistoryDataService
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +31,21 @@ public class HistoryPresenterImpl implements HistoryContract.Presenter {
 
     @Override
     public List<HistoryData> getHistory() {
-        return mHistoryDataService.getHistoryDataList();
+        List<HistoryData> data = mHistoryDataService.getHistoryDataList();
+        if (data.isEmpty()) {
+            showEmptyView();
+        }
+
+        return data;
+    }
+
+    @Override
+    public void clearHistory() {
+        mHistoryDataService.deleteAllHistoryData();
+        showEmptyView();
+    }
+
+    private void showEmptyView() {
+        mView.showEmptyView();
     }
 }

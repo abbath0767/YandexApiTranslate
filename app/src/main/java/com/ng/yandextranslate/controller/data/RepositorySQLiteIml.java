@@ -13,7 +13,7 @@ import com.ng.yandextranslate.model.db.wrappers.BaseCursorWrapper;
 import com.ng.yandextranslate.model.db.wrappers.HistoryCursorWrapper;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,7 +74,7 @@ public class RepositorySQLiteIml implements Repository {
     public List<HistoryData> getAllHistories() {
         Log.d(TAG, "getAllHistories");
 
-        List<HistoryData> list = new ArrayList<>();
+        List<HistoryData> list = new LinkedList<>();
         BaseCursorWrapper cursor = queryData(HistoryTable.NAME, null, null);
 
         try {
@@ -95,7 +95,7 @@ public class RepositorySQLiteIml implements Repository {
     private BaseCursorWrapper queryData(String tableName, String whereClause, String[] whereArgs) {
 
         Cursor cursor = mDataBase.query(
-                HistoryTable.NAME, //table name
+                tableName, //table name
                 null,                                            //columns
                 whereClause,                                     //selection
                 whereArgs,                                       //selection args[]
@@ -104,7 +104,14 @@ public class RepositorySQLiteIml implements Repository {
                 null                                            //order by
                 );
 
-        return new HistoryCursorWrapper(cursor);
+        switch (tableName) {
+            case HistoryTable.NAME: {
+                return new HistoryCursorWrapper(cursor);
+            }
+            default: {
+                return BaseCursorWrapper.NullableCursorWrapper.getInstance();
+            }
+        }
     }
 
     @Override
@@ -114,16 +121,21 @@ public class RepositorySQLiteIml implements Repository {
 
     @Override
     public void deleteHistoryData(int id) {
-
+        mDataBase.delete(HistoryTable.NAME, HistoryTable.Cols.ID + " = ?", new String[] {String.valueOf(id)});
     }
 
     @Override
     public void deleteAllHistoryData() {
-
+        mDataBase.delete(HistoryTable.NAME, null, null);
     }
 
     @Override
     public long getDataCount(String tableName) {
         return DatabaseUtils.queryNumEntries(mDataBase, tableName);
+    }
+
+    @Override
+    public void makeHistoryFavorite(final int id, final boolean isFavorite) {
+
     }
 }

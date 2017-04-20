@@ -12,9 +12,12 @@ import java.util.List;
 public interface HistoryContract extends BaseContract {
 
     interface View extends BaseContract.BaseView {
+        void showEmptyView();
     }
 
     interface Presenter extends BaseContract.BasePresenter {
         List<HistoryData> getHistory();
+
+        void clearHistory();
     }
 }

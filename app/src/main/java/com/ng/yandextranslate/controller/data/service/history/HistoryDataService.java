@@ -42,7 +42,7 @@ public class HistoryDataService {
         repository.deleteAllHistoryData();
     }
 
-    public void makeFavorite(int id) {
-
+    public void makeFavorite(int id, boolean isFavorite) {
+        repository.makeHistoryFavorite(id, isFavorite);
     }
 }
