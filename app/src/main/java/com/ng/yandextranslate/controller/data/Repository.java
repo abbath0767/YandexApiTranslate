@@ -28,4 +28,6 @@ public interface Repository {
     long getDataCount(String tableName);
 
     void makeHistoryFavorite(int id, boolean isFavorite);
+
+    HistoryData getHistory(int id);
 }

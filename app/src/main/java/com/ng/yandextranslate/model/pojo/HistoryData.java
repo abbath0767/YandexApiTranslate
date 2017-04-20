@@ -15,13 +15,13 @@ public class HistoryData {
     private long time;
     private boolean favorite;
 
-    public HistoryData(int key, LanguagePair languagePair, String originalText, String translateText, long time) {
+    public HistoryData(int key, LanguagePair languagePair, String originalText, String translateText, long time, boolean favorite) {
         this.key = key;
         this.languagePair = languagePair;
         this.originalText = originalText;
         this.translateText = translateText;
         this.time = time;
-        this.favorite = false;
+        this.favorite = favorite;
     }
 
     public HistoryData(int key, LanguagePair languagePair, String originalText, String translateText) {

@@ -1,5 +1,7 @@
 package com.ng.yandextranslate.controller.data.service.history;
 
+import android.util.Log;
+
 import com.ng.yandextranslate.controller.data.Repository;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
@@ -11,6 +13,8 @@ import java.util.List;
  */
 
 public class HistoryDataService {
+
+    public static final String TAG = HistoryDataService.class.getSimpleName();
 
     private Repository repository;
 
@@ -40,6 +44,10 @@ public class HistoryDataService {
 
     public void deleteAllHistoryData() {
         repository.deleteAllHistoryData();
+    }
+
+    public HistoryData getHistory(int id) {
+        return repository.getHistory(id);
     }
 
     public void makeFavorite(int id, boolean isFavorite) {

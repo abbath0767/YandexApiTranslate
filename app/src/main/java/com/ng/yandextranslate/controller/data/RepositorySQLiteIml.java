@@ -136,6 +136,26 @@ public class RepositorySQLiteIml implements Repository {
 
     @Override
     public void makeHistoryFavorite(final int id, final boolean isFavorite) {
+        HistoryData data = getHistory(id);
+        data.setFavorite(isFavorite);
+        ContentValues content = getContentValues(data);
 
+        mDataBase.update(HistoryTable.NAME, content, HistoryTable.Cols.ID + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    public HistoryData getHistory(int id) {
+        BaseCursorWrapper<HistoryData> cursor = queryData(HistoryTable.NAME, HistoryTable.Cols.ID + " = ?",
+                new String[]{String.valueOf(id)});
+
+        try {
+            if (cursor.getCount() == 0) {
+                //todo add NullableHistoryData
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getData();
+        } finally {
+            cursor.close();
+        }
     }
 }

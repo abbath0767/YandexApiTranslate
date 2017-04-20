@@ -1,15 +1,23 @@
 package com.ng.yandextranslate.ui;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.model.pojo.HistoryData;
+import com.ng.yandextranslate.model.pojo.LanguagePair;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,10 +28,16 @@ import butterknife.ButterKnife;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
+
+    @Inject
+    HistoryDataService mHistoryDataService;
+
     private List<HistoryData> list;
 
     public HistoryRecyclerViewAdapter(List<HistoryData> list) {
         this.list = list;
+        App.getAppComponent().inject(this);
     }
 
     @Override
@@ -40,6 +54,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         viewHolder.mOriginalTextView.setText(list.get(position).getOriginalText());
         viewHolder.mTranslateTextView.setText(list.get(position).getTranslateText());
         viewHolder.mLangsTextView.setText(list.get(position).getLanguagePair().getLangPairStringValue());
+        viewHolder.mFavoriteCheckBox.setChecked(list.get(position).isFavorite());
+
+        viewHolder.mFavoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                mHistoryDataService.makeFavorite(list.get(position).getKey(), isChecked);
+            }
+        });
     }
 
     @Override
@@ -55,10 +77,13 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         TextView mTranslateTextView;
         @BindView(R.id.item_text_view_langs)
         TextView mLangsTextView;
+        @BindView(R.id.item_checkbox_favorite)
+        CheckBox mFavoriteCheckBox;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
         }
     }
 }

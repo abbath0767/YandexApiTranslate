@@ -22,7 +22,8 @@ public class HistoryCursorWrapper extends BaseCursorWrapper<HistoryData> {
         String originalText = getString(getColumnIndex(HistoryTable.Cols.TEXT_FROM));
         String translateText = getString(getColumnIndex(HistoryTable.Cols.TEXT_TO));
         long time = getLong(getColumnIndex(HistoryTable.Cols.TIME));
+        boolean favorite = getInt(getColumnIndex(HistoryTable.Cols.FAVORITE)) == 1;
 
-        return new HistoryData(key, new LanguagePair(pair), originalText, translateText, time);
+        return new HistoryData(key, new LanguagePair(pair), originalText, translateText, time, favorite);
     }
 }
