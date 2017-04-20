@@ -10,7 +10,6 @@ import com.ng.yandextranslate.controller.data.service.history.HistoryDataModule;
 import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.controller.network.NetworkModule;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
-import com.ng.yandextranslate.ui.HistoryRecyclerViewAdapter;
 
 /**
  * Created by NGusarov on 17/03/17.

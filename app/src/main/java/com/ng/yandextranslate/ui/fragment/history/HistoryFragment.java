@@ -17,10 +17,9 @@ import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.implementation.history.DaggerHistoryComponent;
-import com.ng.yandextranslate.presentation.implementation.history.HistoryComponent;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryModule;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
-import com.ng.yandextranslate.ui.HistoryRecyclerViewAdapter;
+import com.ng.yandextranslate.controller.adapter.HistoryRecyclerViewAdapter;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
 
 

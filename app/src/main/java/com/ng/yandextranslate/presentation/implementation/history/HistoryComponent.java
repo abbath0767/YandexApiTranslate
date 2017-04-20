@@ -1,7 +1,6 @@
 package com.ng.yandextranslate.presentation.implementation.history;
 
 import com.ng.yandextranslate.AppComponent;
-import com.ng.yandextranslate.ui.HistoryRecyclerViewAdapter;
 import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 
 import dagger.Component;

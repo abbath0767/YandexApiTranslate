@@ -1,7 +1,6 @@
-package com.ng.yandextranslate.ui;
+package com.ng.yandextranslate.controller.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
-import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.model.pojo.HistoryData;
-import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 import com.ng.yandextranslate.presentation.implementation.history.HistoryPresenterImpl;
-import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 
 import java.util.List;
 

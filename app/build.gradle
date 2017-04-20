@@ -55,7 +55,6 @@ dependencies {
     //OkHttp
     compile "com.squareup.okhttp3:okhttp:$okhttp"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
-    compile 'com.squareup.okio:okio:1.7.0'
     //Gson
     compile "com.google.code.gson:gson:$gsonVersion"
 
@@ -66,12 +65,14 @@ dependencies {
     //dagger 2
     compile "com.google.dagger:dagger:$dagger"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
-    provided 'javax.annotation:jsr250-api:1.0'
 
     //rx
     compile "io.reactivex:rxandroid:$rxAndroid"
     compile "io.reactivex:rxjava:$rxJava"
     compile "com.squareup.retrofit2:adapter-rxjava:$rxAdapter"
 
+    compile 'com.squareup.okio:okio:1.7.0'
+    compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
+    provided 'javax.annotation:jsr250-api:1.0'
 }
