@@ -4,9 +4,17 @@
              android:layout_height="match_parent"
              tools:context="com.ng.yandextranslate.ui.fragment.favorite.FavoriteFragment">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favorite_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
+        android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_data_available" />
 
 </FrameLayout>

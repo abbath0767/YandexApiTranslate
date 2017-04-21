@@ -18,6 +18,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.ui.fragment.favorite.FavoriteFragment;
 import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
 import com.ng.yandextranslate.util.DrawerFragmentEnum;
@@ -119,7 +120,7 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
                 break;
             }
             case FAVOURITES: {
-                //todo favourites
+                fragment = getFavoriteFragment();
                 break;
             }
             case ABOUT: {
@@ -162,5 +163,9 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Fragment getFavoriteFragment() {
+        return FavoriteFragment.newInstance(null);
     }
 }

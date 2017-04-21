@@ -25,8 +25,6 @@ import butterknife.ButterKnife;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
-
     HistoryPresenterImpl mPresenter;
 
     private List<HistoryData> list;
@@ -34,7 +32,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Inject
     public HistoryRecyclerViewAdapter(HistoryPresenterImpl presenter) {
         mPresenter = presenter;
-        this.list = mPresenter.getHistory();
+        list = mPresenter.getHistory();
     }
 
     @Override
@@ -80,7 +78,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public HistoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
         }
     }
 }

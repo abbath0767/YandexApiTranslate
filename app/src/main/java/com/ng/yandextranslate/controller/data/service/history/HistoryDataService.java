@@ -53,4 +53,12 @@ public class HistoryDataService {
     public void makeFavorite(int id, boolean isFavorite) {
         repository.makeHistoryFavorite(id, isFavorite);
     }
+
+    public void unMakeAllFavorites() {
+        //todo need update and checnge this to repository
+        List<HistoryData> favorites = getFavoriteHistoryDataList();
+        for (HistoryData history: favorites) {
+            makeFavorite(history.getKey(), false);
+        }
+    }
 }
