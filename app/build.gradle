@@ -67,9 +67,9 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
     //rx
-    compile "io.reactivex:rxandroid:$rxAndroid"
-    compile "io.reactivex:rxjava:$rxJava"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rxAdapter"
+//    compile "io.reactivex:rxandroid:$rxAndroid"
+//    compile "io.reactivex:rxjava:$rxJava"
+//    compile "com.squareup.retrofit2:adapter-rxjava:$rxAdapter"
 
     compile 'com.squareup.okio:okio:1.7.0'
     compile 'com.android.support:support-v4:24.2.1'
