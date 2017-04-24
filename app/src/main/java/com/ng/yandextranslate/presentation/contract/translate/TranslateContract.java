@@ -18,19 +18,25 @@ public interface TranslateContract extends BaseContract {
 
     interface View extends BaseContract.BaseView {
         void showTranslateResult(String message);
-        void setDefaultLanguages(LanguagePair languagePair);
-        void setLanguages(Map<String, String> supportedLangs, List<String> supportedLangDirs);
-
-        LanguageTranscript getFrom();
-        LanguageTranscript getTo();
+        void setLanguages();
 
         void showProgressBar();
         void dismissProgressBar();
 
         void showDialog(String message);
+
+        int getFromSpinnerPosition();
+
+        int getToSpinnerPosition();
+
+        void setFromSpinnerSelection(int toSpinnerPosition);
+
+        void setToSpinnerPosition(int tmpPosition);
+
+        void invalidateSpinnerView();
     }
 
     interface Presenter extends BaseContract.BasePresenter {
-        void getTranslate(String message, LanguagePair languagePair);
+        void getTranslate(String message);
     }
 }

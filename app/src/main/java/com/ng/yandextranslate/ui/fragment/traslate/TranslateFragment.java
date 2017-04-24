@@ -1,7 +1,6 @@
 package com.ng.yandextranslate.ui.fragment.traslate;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,19 +8,17 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +33,9 @@ import butterknife.ButterKnife;
 import com.ng.yandextranslate.App;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 import com.ng.yandextranslate.presentation.contract.translate.TranslateContract;
 import com.ng.yandextranslate.presentation.implementation.translate.DaggerTranslateComponent;
+import com.ng.yandextranslate.presentation.implementation.translate.TranslateComponent;
 import com.ng.yandextranslate.presentation.implementation.translate.TranslateModule;
 import com.ng.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
@@ -64,6 +61,8 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     @BindView(R.id.translate_progress_for_text)
     ProgressBar mProgressBar;
 
+    private static TranslateComponent mTranslateComponent;
+
     @Inject
     TranslatePresenterImpl mPresenter;
 
@@ -78,10 +77,8 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
         ButterKnife.bind(this, rootView);
 
-        DaggerTranslateComponent.builder()
-                .appComponent(App.getAppComponent())
-                .translateModule(new TranslateModule(this))
-                .build().inject(this);
+        mTranslateComponent = buildTranslateComponent();
+        mTranslateComponent.inject(this);
 
         mEditTextIn.setOnEditorActionListener(new DoneOnEditorActionListener());
 
@@ -109,7 +106,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                                     @Override
                                     public void run() {
                                         if (!TextUtils.isEmpty(s.toString())) {
-                                            mPresenter.getTranslate(s.toString(), getCurrentLanguagePair());
+                                            mPresenter.getTranslate(s.toString());
                                         }
                                     }
                                 },
@@ -119,10 +116,10 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 }
         );
 
-        mLanguageSelectView.setOnClickListener(v -> {
-            mLanguageSelectView.swapLanguages();
-            mLanguageSelectView.invalidate();
-        });
+//        mLanguageSelectView.setOnClickListener(v -> {
+//            mPresenter.swapLangs();
+//            mLanguageSelectView.invalidate();
+//        });
 
         mLanguageSelectView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -133,11 +130,63 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
             }
         });
 
+//        mLanguageSelectView.setOnItemClickListeners(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+//                mPresenter.fromSelectItem(position);
+//            }
+//            @Override
+//            public void onNothingSelected(final AdapterView<?> parent) {
+//            }
+//        },
+//                new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+//                mPresenter.toSelectItem(position);
+//            }
+//            @Override
+//            public void onNothingSelected(final AdapterView<?> parent) {
+//
+//            }
+//        });
+        Log.d(TAG, "HASHCODE : " + mPresenter.hashCode());
+
         return rootView;
+    }
+
+    public static TranslateComponent getTranslateComponent() {
+        return mTranslateComponent;
+    }
+
+    private TranslateComponent buildTranslateComponent() {
+        return DaggerTranslateComponent.builder()
+                .appComponent(App.getAppComponent())
+                .translateModule(new TranslateModule(this))
+                .build();
     }
 
     public void showDialog(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public int getFromSpinnerPosition() {
+        return mLanguageSelectView.getFromSpinnerPosition();
+    }
+
+    @Override
+    public int getToSpinnerPosition() {
+        return mLanguageSelectView.getToSpinnerPosition();
+    }
+
+    @Override
+    public void setFromSpinnerSelection(final int position) {
+        mLanguageSelectView.setFromSpinnerPosition(position);
+    }
+
+    @Override
+    public void setToSpinnerPosition(final int position) {
+        mLanguageSelectView.setToSpinnerPosition(position);
     }
 
     //todo change textView and progressBar to one custom view
@@ -166,31 +215,8 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     }
 
     @Override
-    public void setLanguages(Map<String, String> supportedLangs, List<String> supportLangDirs) {
-        Log.d(TAG, "setLanguages. supportLangDirs: " + Arrays.toString(supportLangDirs.toArray()));
-
-        List<String> list = new ArrayList<>();
-        List<String> keyList = new ArrayList<>();
-        for (Map.Entry<String, String> entry : supportedLangs.entrySet()) {
-            keyList.add(entry.getKey());
-            list.add(entry.getValue());
-        }
-
-        mLanguageSelectView.setLanguages(supportedLangs, supportLangDirs);
-    }
-
-    @Override
-    public LanguageTranscript getFrom() {
-        return mLanguageSelectView.getFrom();
-    }
-
-    @Override
-    public LanguageTranscript getTo() {
-        return mLanguageSelectView.getTo();
-    }
-
-    private LanguagePair getCurrentLanguagePair() {
-        return mLanguageSelectView.getLanguagePair();
+    public void setLanguages() {
+        mLanguageSelectView.setLanguages();
     }
 
     @Override
@@ -199,8 +225,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     }
 
     @Override
-    public void setDefaultLanguages(LanguagePair languagePair) {
-        mLanguageSelectView.setLanguagePair(languagePair);
+    public void invalidateSpinnerView() {
         mLanguageSelectView.invalidate();
     }
 }

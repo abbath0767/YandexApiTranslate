@@ -1,11 +1,9 @@
 package com.ng.yandextranslate.ui.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -21,6 +19,10 @@ import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
 import com.ng.yandextranslate.model.pojo.LanguageTranscript;
+import com.ng.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
+import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
+
+import javax.inject.Inject;
 
 /**
  * Created by NG on 19.03.17.
@@ -39,11 +41,16 @@ public class LanguageSelectView extends LinearLayout {
     Spinner mToSpinner;
 
     //todo refactor this! (╯°□°）╯︵ ┻━┻"
-    private List<String> supportedLanguages;
-    private List<LanguageTranscript> transcriptList;
-    private List<LanguagePair> languagePairList;
-    private LanguageTranscript mFrom;
-    private LanguageTranscript mTo;
+//    private List<String> supportedLanguages;
+//    private List<LanguageTranscript> transcriptList;
+//    private List<LanguagePair> languagePairList;
+//    private LanguageTranscript mFrom;
+//    private LanguageTranscript mTo;
+
+    ArrayAdapter<String> adapter;
+
+    @Inject
+    TranslatePresenterImpl mTranslatePresenter;
 
     public LanguageSelectView(Context context) {
         super(context);
@@ -58,9 +65,44 @@ public class LanguageSelectView extends LinearLayout {
     private void initView(Context context) {
         this.context = context;
         inflate(context, R.layout.view_language_select, this);
-        languagePairList = new ArrayList<>();
-        transcriptList = new ArrayList<>();
-        supportedLanguages = new ArrayList<>();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        TranslateFragment.getTranslateComponent().inject(this);
+        Log.d(TAG, "HASHCODE: " + mTranslatePresenter.hashCode());
+        mSwapImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mTranslatePresenter.swapLangs();
+                invalidate();
+            }
+        });
+
+        mFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+                mTranslatePresenter.fromSelectItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> parent) {
+
+            }
+        });
+
+        mToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+                mTranslatePresenter.toSelectItem(position);
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void setOnClickListener(OnClickListener listener) {
@@ -79,95 +121,37 @@ public class LanguageSelectView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    public void setLanguages(Map<String, String> langs, List<String> supportedLangDirs) {
-        for (String lang: supportedLangDirs) {
-            languagePairList.add(new LanguagePair(lang));
-        }
-
-        for (Map.Entry<String, String> entry: langs.entrySet()) {
-            transcriptList.add(new LanguageTranscript(entry.getValue(), entry.getKey()));
-            supportedLanguages.add(entry.getValue());
-        }
-
+    public void setLanguages() {
         initAdapters();
     }
 
     private void initAdapters() {
-        ArrayAdapter<String> adapterFrom = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, supportedLanguages);
-        adapterFrom.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mFromSpinner.setAdapter(adapterFrom);
+        adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mTranslatePresenter.getSupportedLang());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mFromSpinner.setAdapter(adapter);
         //todo another adapter? yes need 2 adapters with two lists of languages
-        mToSpinner.setAdapter(adapterFrom);
-        setOnItemClickListeners();
+        mToSpinner.setAdapter(adapter);
     }
 
-    //todo move logic to presenter
-    private void setOnItemClickListeners() {
-        mFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mFrom = transcriptList.get(position);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+//    public void setOnItemClickListeners(AdapterView.OnItemSelectedListener fromListener,
+//                                        AdapterView.OnItemSelectedListener toListener) {
+//        mFromSpinner.setOnItemSelectedListener(fromListener);
+//        mToSpinner.setOnItemSelectedListener(toListener);
+//    }
 
-        mToSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mTo = transcriptList.get(position);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+    public int getFromSpinnerPosition() {
+        return mFromSpinner.getSelectedItemPosition();
     }
 
-    public LanguageTranscript getFrom() {
-        return mFrom;
+    public int getToSpinnerPosition() {
+        return mToSpinner.getSelectedItemPosition();
     }
 
-    public LanguageTranscript getTo() {
-        return mTo;
+    public void setFromSpinnerPosition(final int position) {
+        mFromSpinner.setSelection(position);
     }
 
-    public LanguagePair getLanguagePair() {
-        return new LanguagePair(mFrom.getTranscript(), mTo.getTranscript());
-    }
-
-    public void swapLanguages() {
-        Log.d(TAG, "swap");
-        swapTranscript();
-        swapView();
-    }
-
-    private void swapTranscript() {
-        Log.d(TAG, "swap transcript");
-        LanguageTranscript tmp = mFrom;
-        mFrom = mTo;
-        mTo = tmp;
-    }
-
-    private void swapView() {
-        int tmpPosition = mFromSpinner.getSelectedItemPosition();
-        mFromSpinner.setSelection(mToSpinner.getSelectedItemPosition());
-        mToSpinner.setSelection(tmpPosition);
-    }
-
-    public void setLanguagePair(final LanguagePair languagePair) {
-        mFrom = new LanguageTranscript(getTranscript(languagePair.getLanguageFrom()), languagePair.getLanguageFrom());
-        mTo = new LanguageTranscript(getTranscript(languagePair.getLanguageTo()), languagePair.getLanguageTo());
-        mFromSpinner.setSelection(supportedLanguages.indexOf(mFrom.getName()));
-        mToSpinner.setSelection(supportedLanguages.indexOf(mTo.getName()));
-    }
-
-    private String getTranscript(String language) {
-        for (LanguageTranscript transcript: transcriptList) {
-            if (transcript.getTranscript().equals(language)) {
-                return transcript.getName();
-            }
-        }
-        return "error";
+    public void setToSpinnerPosition(final int position) {
+        mToSpinner.setSelection(position);
     }
 }
