@@ -10,8 +10,6 @@ import com.ng.yandextranslate.model.pojo.LanguagePair;
 import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 import com.ng.yandextranslate.presentation.contract.BaseContract;
 
-import rx.Observable;
-
 /**
  * Created by NGusarov on 17/03/17.
  */
