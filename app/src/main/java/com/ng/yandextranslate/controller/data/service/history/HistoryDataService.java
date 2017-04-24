@@ -1,6 +1,7 @@
 package com.ng.yandextranslate.controller.data.service.history;
 
 import com.ng.yandextranslate.controller.data.db.Repository;
+import com.ng.yandextranslate.model.db.table.HistoryShema;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
 
@@ -58,5 +59,9 @@ public class HistoryDataService {
         for (HistoryData history: favorites) {
             makeFavorite(history.getKey(), false);
         }
+    }
+
+    public long getHistoryCount() {
+        return repository.getDataCount(HistoryShema.HistoryTable.NAME);
     }
 }

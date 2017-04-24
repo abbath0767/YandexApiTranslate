@@ -1,5 +1,6 @@
 package com.ng.yandextranslate.presentation.implementation.translate;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -107,6 +108,9 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     @Override
     public void getTranslate(String message) {
+        if (TextUtils.isEmpty(message)) {
+            return;
+        }
         Log.d(TAG, "GET TRANSLATE FOR MESSAGE: " + message);
         Log.d(TAG, "GET LANG: " + getCurrentLanguagePair().getLangPairStringValue());
 
@@ -116,14 +120,20 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
         call.enqueue(new Callback<TranslateResponse>() {
             @Override
             public void onResponse(final Call<TranslateResponse> call, final Response<TranslateResponse> response) {
-                mView.showTranslateResult(response.body().getResponseText());
-                mView.dismissProgressBar();
-                mHistoryDataService.addHistoryData(message, response.body().getResponseText(), getCurrentLanguagePair());
-                mSPreferenceManager.saveCurrentLanguages(getCurrentLanguagePair());
+                if (response.isSuccessful()) {
+                    mView.showTranslateResult(response.body().getResponseText());
+                    mView.dismissProgressBar();
+                    mHistoryDataService.addHistoryData(message, response.body().getResponseText(), getCurrentLanguagePair());
+                    mSPreferenceManager.saveCurrentLanguages(getCurrentLanguagePair());
+                } else {
+                    mView.dismissProgressBar();
+                    mView.showError(response.message());
+                }
             }
 
             @Override
             public void onFailure(final Call<TranslateResponse> call, final Throwable t) {
+                mView.dismissProgressBar();
                 mView.showError(t.getMessage());
             }
         });
@@ -164,5 +174,17 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
         int tmpPosition = mView.getFromSpinnerPosition();
         mView.setFromSpinnerSelection(mView.getToSpinnerPosition());
         mView.setToSpinnerPosition(tmpPosition);
+        mView.swapText();
+    }
+
+    public void forceTranslate() {
+        Log.d(TAG, "FORCE TRANSLATE. CURRENT LANGS: " + getCurrentLanguagePair().getLangPairStringValue());
+        getTranslate(mView.getOriginal());
+    }
+
+    public void makeLastFavorite() {
+        int lastHistoryId = mHistoryDataService.getHistory((int) mHistoryDataService.getHistoryCount()).getKey();
+        boolean isFavor = mHistoryDataService.getHistory(lastHistoryId).isFavorite();
+        mHistoryDataService.makeFavorite((int) mHistoryDataService.getHistoryCount(), !isFavor);
     }
 }

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,10 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     TextView mTextViewOut;
     @BindView(R.id.translate_progress_for_text)
     ProgressBar mProgressBar;
+    @BindView(R.id.translate_button_clear)
+    ImageButton mButtonClear;
+    @BindView(R.id.translate_button_add_to_favor)
+    ImageButton mButtonAddToFavor;
 
     private static TranslateComponent mTranslateComponent;
 
@@ -116,11 +121,6 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 }
         );
 
-//        mLanguageSelectView.setOnClickListener(v -> {
-//            mPresenter.swapLangs();
-//            mLanguageSelectView.invalidate();
-//        });
-
         mLanguageSelectView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View v, final MotionEvent event) {
@@ -130,29 +130,25 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
             }
         });
 
-//        mLanguageSelectView.setOnItemClickListeners(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-//                mPresenter.fromSelectItem(position);
-//            }
-//            @Override
-//            public void onNothingSelected(final AdapterView<?> parent) {
-//            }
-//        },
-//                new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-//                mPresenter.toSelectItem(position);
-//            }
-//            @Override
-//            public void onNothingSelected(final AdapterView<?> parent) {
-//
-//            }
-//        });
-        Log.d(TAG, "HASHCODE : " + mPresenter.hashCode());
+        mButtonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                clearText();
+            }
+        });
+
+        mButtonAddToFavor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mPresenter.makeLastFavorite();
+                showDialog(getString(R.string.add_to_favor));
+            }
+        });
 
         return rootView;
     }
+
+
 
     public static TranslateComponent getTranslateComponent() {
         return mTranslateComponent;
@@ -196,6 +192,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mButtonAddToFavor.setEnabled(false);
                 mTextViewOut.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
             }
@@ -205,9 +202,11 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     @Override
     public void dismissProgressBar() {
         Log.d(TAG, "dismissProgressBar");
+        mButtonAddToFavor.setEnabled(true);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mButtonAddToFavor.setEnabled(true);
                 mTextViewOut.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
@@ -227,5 +226,30 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     @Override
     public void invalidateSpinnerView() {
         mLanguageSelectView.invalidate();
+    }
+
+    @Override
+    public void swapText() {
+        String tmp = mEditTextIn.getText().toString();
+        mEditTextIn.setText(mTextViewOut.getText().toString());
+        mTextViewOut.setText(tmp);
+    }
+
+    @Override
+    public void clearText() {
+        mEditTextIn.getText().clear();
+        mTextViewOut.setText(null);
+    }
+
+    @Override
+    public String getOriginal() {
+        String result = mEditTextIn.getText().toString();
+        Log.d(TAG, "result: " + result);
+        return result;
+    }
+
+    @Override
+    public void showError(final String errorMessage) {
+        showDialog(errorMessage);
     }
 }

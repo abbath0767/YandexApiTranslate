@@ -10,15 +10,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
-import com.ng.yandextranslate.model.pojo.LanguagePair;
-import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 import com.ng.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
 import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
 
@@ -41,11 +36,6 @@ public class LanguageSelectView extends LinearLayout {
     Spinner mToSpinner;
 
     //todo refactor this! (╯°□°）╯︵ ┻━┻"
-//    private List<String> supportedLanguages;
-//    private List<LanguageTranscript> transcriptList;
-//    private List<LanguagePair> languagePairList;
-//    private LanguageTranscript mFrom;
-//    private LanguageTranscript mTo;
 
     ArrayAdapter<String> adapter;
 
@@ -70,13 +60,13 @@ public class LanguageSelectView extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
         TranslateFragment.getTranslateComponent().inject(this);
-        Log.d(TAG, "HASHCODE: " + mTranslatePresenter.hashCode());
+
         mSwapImageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
                 mTranslatePresenter.swapLangs();
-                invalidate();
             }
         });
 
@@ -96,6 +86,7 @@ public class LanguageSelectView extends LinearLayout {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 mTranslatePresenter.toSelectItem(position);
+                mTranslatePresenter.forceTranslate();
             }
 
             @Override
@@ -133,11 +124,6 @@ public class LanguageSelectView extends LinearLayout {
         mToSpinner.setAdapter(adapter);
     }
 
-//    public void setOnItemClickListeners(AdapterView.OnItemSelectedListener fromListener,
-//                                        AdapterView.OnItemSelectedListener toListener) {
-//        mFromSpinner.setOnItemSelectedListener(fromListener);
-//        mToSpinner.setOnItemSelectedListener(toListener);
-//    }
 
     public int getFromSpinnerPosition() {
         return mFromSpinner.getSelectedItemPosition();

@@ -34,6 +34,12 @@ public interface TranslateContract extends BaseContract {
         void setToSpinnerPosition(int tmpPosition);
 
         void invalidateSpinnerView();
+
+        void swapText();
+
+        void clearText();
+
+        String getOriginal();
     }
 
     interface Presenter extends BaseContract.BasePresenter {
