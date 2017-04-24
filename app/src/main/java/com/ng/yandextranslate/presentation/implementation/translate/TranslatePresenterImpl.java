@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
+import com.ng.yandextranslate.controller.data.spreference.SPreferenceManager;
 import com.ng.yandextranslate.controller.network.YandexTranslateApi;
 import com.ng.yandextranslate.controller.network.data.response.LanguageListResponse;
 import com.ng.yandextranslate.controller.network.data.response.TranslateResponse;
@@ -28,7 +29,8 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
 
     private TranslateContract.View mView;
     private YandexTranslateApi mYandexTranslateApi;
-    private HistoryDataService mHistoryDataServise;
+    private HistoryDataService mHistoryDataService;
+    private SPreferenceManager mSPreferenceManager;
 
     //todo unhardcode
     private static String LANG = "ru";
@@ -36,14 +38,16 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     @Inject
     public TranslatePresenterImpl(YandexTranslateApi api,
                                   HistoryDataService historyDataService,
+                                  SPreferenceManager preferenceManager,
                                   TranslateContract.View view) {
         this.mView = view;
         this.mYandexTranslateApi = api;
-        this.mHistoryDataServise = historyDataService;
+        this.mHistoryDataService = historyDataService;
+        this.mSPreferenceManager = preferenceManager;
         loadSupportLanguages();
     }
 
-    public void loadSupportLanguages() {
+    private void loadSupportLanguages() {
         Call<LanguageListResponse> call = mYandexTranslateApi.loadSupportedLangList(LANG);
         call.enqueue(new Callback<LanguageListResponse>() {
             @Override
@@ -57,21 +61,11 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                 t.printStackTrace();
             }
         });
-
-//        RequestHelper.asyncRequest(mYandexTranslateApi.loadSupportedLangList(LANG),
-//                data -> {
-//                    compareSupportLanguages(data.getMapLangs(), data.getListDirs());
-//                },
-//                error -> {
-//                    //todo need error processing to view
-//                    Log.d(TAG, "ERROR IMPL LOAD SUPP LANG! ");
-//                    error.printStackTrace();
-//                }
-//        );
     }
 
     private void setSupportLangToView(Map<String, String> supportedLangs, List<String> supportedLangDirs) {
         mView.setLanguages(supportedLangs, supportedLangDirs);
+        mView.setDefaultLanguages(mSPreferenceManager.getCurrentLanguages());
     }
 
     @Override
@@ -87,7 +81,9 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
             public void onResponse(final Call<TranslateResponse> call, final Response<TranslateResponse> response) {
                 mView.showTranslateResult(response.body().getResponseText());
                 mView.dismissProgressBar();
-                mHistoryDataServise.addHistoryData(message, response.body().getResponseText(), langPair);
+                mHistoryDataService.addHistoryData(message, response.body().getResponseText(), langPair);
+                //todo useless
+                mSPreferenceManager.saveCurrentLanguages(langPair);
             }
 
             @Override

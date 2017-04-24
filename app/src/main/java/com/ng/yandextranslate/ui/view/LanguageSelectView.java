@@ -1,9 +1,11 @@
 package com.ng.yandextranslate.ui.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -36,6 +38,7 @@ public class LanguageSelectView extends LinearLayout {
     @BindView(R.id.language_select_spinner_to)
     Spinner mToSpinner;
 
+    //todo refactor this! (╯°□°）╯︵ ┻━┻"
     private List<String> supportedLanguages;
     private List<LanguageTranscript> transcriptList;
     private List<LanguagePair> languagePairList;
@@ -62,6 +65,12 @@ public class LanguageSelectView extends LinearLayout {
 
     public void setOnClickListener(OnClickListener listener) {
         mSwapImageButton.setOnClickListener(listener);
+    }
+
+    public void setOnTouchListener(OnTouchListener listener) {
+        mFromSpinner.setOnTouchListener(listener);
+        mToSpinner.setOnTouchListener(listener);
+        mSwapImageButton.setOnTouchListener(listener);
     }
 
     @Override
@@ -92,6 +101,7 @@ public class LanguageSelectView extends LinearLayout {
         setOnItemClickListeners();
     }
 
+    //todo move logic to presenter
     private void setOnItemClickListeners() {
         mFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -100,7 +110,6 @@ public class LanguageSelectView extends LinearLayout {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -111,7 +120,6 @@ public class LanguageSelectView extends LinearLayout {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -145,5 +153,21 @@ public class LanguageSelectView extends LinearLayout {
         int tmpPosition = mFromSpinner.getSelectedItemPosition();
         mFromSpinner.setSelection(mToSpinner.getSelectedItemPosition());
         mToSpinner.setSelection(tmpPosition);
+    }
+
+    public void setLanguagePair(final LanguagePair languagePair) {
+        mFrom = new LanguageTranscript(getTranscript(languagePair.getLanguageFrom()), languagePair.getLanguageFrom());
+        mTo = new LanguageTranscript(getTranscript(languagePair.getLanguageTo()), languagePair.getLanguageTo());
+        mFromSpinner.setSelection(supportedLanguages.indexOf(mFrom.getName()));
+        mToSpinner.setSelection(supportedLanguages.indexOf(mTo.getName()));
+    }
+
+    private String getTranscript(String language) {
+        for (LanguageTranscript transcript: transcriptList) {
+            if (transcript.getTranscript().equals(language)) {
+                return transcript.getName();
+            }
+        }
+        return "error";
     }
 }

@@ -1,8 +1,6 @@
 package com.ng.yandextranslate.controller.data.service.history;
 
-import android.util.Log;
-
-import com.ng.yandextranslate.controller.data.Repository;
+import com.ng.yandextranslate.controller.data.db.Repository;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.model.pojo.LanguagePair;
 

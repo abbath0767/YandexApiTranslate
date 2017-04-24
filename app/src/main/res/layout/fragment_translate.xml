@@ -12,13 +12,14 @@
 
     <EditText
         android:id="@+id/translate_edit_text_in"
-        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="128dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/edit_text_background"
         android:gravity="top|left"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:hint="@string/enter_word"
         android:padding="5dp" />
 

@@ -1,5 +1,7 @@
 package com.ng.yandextranslate.ui.fragment.traslate;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,9 +9,13 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,6 +43,9 @@ import com.ng.yandextranslate.presentation.implementation.translate.TranslateMod
 import com.ng.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
 import com.ng.yandextranslate.ui.view.LanguageSelectView;
+import com.ng.yandextranslate.util.DoneOnEditorActionListener;
+
+import static com.ng.yandextranslate.util.AppPrefs.DELAY_BEFORE_POST;
 
 /**
  * Created by NG on 15.03.17.
@@ -45,8 +54,6 @@ import com.ng.yandextranslate.ui.view.LanguageSelectView;
 public class TranslateFragment extends BaseFragment implements TranslateContract.View {
 
     private static final String TAG = TranslateFragment.class.getSimpleName();
-
-    private static final long DELAY_BEFORE_POST = 1000;
 
     @BindView(R.id.translate_language_select)
     LanguageSelectView mLanguageSelectView;
@@ -71,24 +78,27 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
         ButterKnife.bind(this, rootView);
 
-        //todo mb App.getAppComponent.translateModulre(new TranslateModule(this).inject(this))
         DaggerTranslateComponent.builder()
                 .appComponent(App.getAppComponent())
                 .translateModule(new TranslateModule(this))
                 .build().inject(this);
 
+        mEditTextIn.setOnEditorActionListener(new DoneOnEditorActionListener());
 
         mEditTextIn.addTextChangedListener(
                 new TextWatcher() {
-                    private Timer timer=new Timer();
+                    private Timer timer = new Timer();
 
-                    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (timer != null) {
                             timer.cancel();
                         }
                     }
 
-                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
                     public void afterTextChanged(final Editable s) {
@@ -110,9 +120,17 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         );
 
         mLanguageSelectView.setOnClickListener(v -> {
-            Log.d(TAG, "swap");
             mLanguageSelectView.swapLanguages();
             mLanguageSelectView.invalidate();
+        });
+
+        mLanguageSelectView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(final View v, final MotionEvent event) {
+                InputMethodManager inputMethodManager = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                return false;
+            }
         });
 
         return rootView;
@@ -182,6 +200,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
     @Override
     public void setDefaultLanguages(LanguagePair languagePair) {
-
+        mLanguageSelectView.setLanguagePair(languagePair);
+        mLanguageSelectView.invalidate();
     }
 }

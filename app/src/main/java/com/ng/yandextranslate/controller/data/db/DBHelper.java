@@ -1,4 +1,4 @@
-package com.ng.yandextranslate.controller.data;
+package com.ng.yandextranslate.controller.data.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

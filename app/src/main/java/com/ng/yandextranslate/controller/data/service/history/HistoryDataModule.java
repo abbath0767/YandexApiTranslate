@@ -1,6 +1,6 @@
 package com.ng.yandextranslate.controller.data.service.history;
 
-import com.ng.yandextranslate.controller.data.Repository;
+import com.ng.yandextranslate.controller.data.db.Repository;
 
 import javax.inject.Singleton;
 

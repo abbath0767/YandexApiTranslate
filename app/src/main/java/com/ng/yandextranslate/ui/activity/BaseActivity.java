@@ -1,5 +1,6 @@
 package com.ng.yandextranslate.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -77,6 +79,7 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
                 super.onDrawerClosed(drawerView);
                 getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
+                closeKeyboard();
             }
 
             @Override
@@ -84,11 +87,17 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu();
+                closeKeyboard();
             }
         };
 
         //todo deprecated?
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    private void closeKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override

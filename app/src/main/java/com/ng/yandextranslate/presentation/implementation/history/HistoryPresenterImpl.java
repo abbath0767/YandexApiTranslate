@@ -1,11 +1,9 @@
 package com.ng.yandextranslate.presentation.implementation.history;
 
-import com.ng.yandextranslate.controller.data.Repository;
 import com.ng.yandextranslate.controller.data.service.history.HistoryDataService;
 import com.ng.yandextranslate.model.pojo.HistoryData;
 import com.ng.yandextranslate.presentation.contract.history.HistoryContract;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
