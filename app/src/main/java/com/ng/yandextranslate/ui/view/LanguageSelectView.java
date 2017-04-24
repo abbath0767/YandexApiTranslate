@@ -2,6 +2,7 @@ package com.ng.yandextranslate.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import com.ng.yandextranslate.model.pojo.LanguageTranscript;
 
 public class LanguageSelectView extends LinearLayout {
 
+    private static final String TAG = LanguageSelectView.class.getSimpleName();
     private Context context;
 
     @BindView(R.id.language_select_swap_button)
@@ -39,7 +41,6 @@ public class LanguageSelectView extends LinearLayout {
     private List<LanguagePair> languagePairList;
     private LanguageTranscript mFrom;
     private LanguageTranscript mTo;
-
 
     public LanguageSelectView(Context context) {
         super(context);
@@ -57,6 +58,10 @@ public class LanguageSelectView extends LinearLayout {
         languagePairList = new ArrayList<>();
         transcriptList = new ArrayList<>();
         supportedLanguages = new ArrayList<>();
+    }
+
+    public void setOnClickListener(OnClickListener listener) {
+        mSwapImageButton.setOnClickListener(listener);
     }
 
     @Override
@@ -120,7 +125,25 @@ public class LanguageSelectView extends LinearLayout {
     }
 
     public LanguagePair getLanguagePair() {
-        //BUG THIS TODO
         return new LanguagePair(mFrom.getTranscript(), mTo.getTranscript());
+    }
+
+    public void swapLanguages() {
+        Log.d(TAG, "swap");
+        swapTranscript();
+        swapView();
+    }
+
+    private void swapTranscript() {
+        Log.d(TAG, "swap transcript");
+        LanguageTranscript tmp = mFrom;
+        mFrom = mTo;
+        mTo = tmp;
+    }
+
+    private void swapView() {
+        int tmpPosition = mFromSpinner.getSelectedItemPosition();
+        mFromSpinner.setSelection(mToSpinner.getSelectedItemPosition());
+        mToSpinner.setSelection(tmpPosition);
     }
 }

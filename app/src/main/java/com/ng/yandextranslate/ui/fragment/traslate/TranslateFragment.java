@@ -109,6 +109,12 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
                 }
         );
 
+        mLanguageSelectView.setOnClickListener(v -> {
+            Log.d(TAG, "swap");
+            mLanguageSelectView.swapLanguages();
+            mLanguageSelectView.invalidate();
+        });
+
         return rootView;
     }
 
