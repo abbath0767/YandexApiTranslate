@@ -34,7 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onCreate");
-        //todo nothing?..
+        //nothing
     }
 
     private void initTables(SQLiteDatabase db) {

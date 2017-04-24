@@ -35,7 +35,6 @@ public class RepositorySQLiteIml implements Repository {
         mDataBase = mHelper.getWritableDatabase();
     }
 
-    //todo we need for this?
     @Override
     public void open() {
         counter.incrementAndGet();
@@ -158,6 +157,8 @@ public class RepositorySQLiteIml implements Repository {
         data.setFavorite(isFavorite);
         ContentValues content = getContentValues(data);
 
+        Log.d(TAG, "make favorite: " + data);
+
         mDataBase.update(HistoryTable.NAME, content, HistoryTable.Cols.ID + " = ?", new String[]{String.valueOf(id)});
     }
 
@@ -167,11 +168,25 @@ public class RepositorySQLiteIml implements Repository {
 
         try {
             if (cursor.getCount() == 0) {
-                //todo add NullableHistoryData
-                return null;
+                return HistoryData.NullableHistoryData.getInstance();
             }
             cursor.moveToFirst();
             return cursor.getData();
+        } finally {
+            cursor.close();
+        }
+    }
+
+    @Override
+    public int getLastHistoryId() {
+        BaseCursorWrapper<HistoryData> cursor = queryData(HistoryTable.NAME, null, null);
+
+        try {
+            if (cursor.getCount() == 0) {
+                return HistoryData.NullableHistoryData.getInstance().getKey();
+            }
+            cursor.moveToLast();
+            return cursor.getData().getKey();
         } finally {
             cursor.close();
         }

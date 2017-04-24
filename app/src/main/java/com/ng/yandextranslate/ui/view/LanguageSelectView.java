@@ -35,8 +35,6 @@ public class LanguageSelectView extends LinearLayout {
     @BindView(R.id.language_select_spinner_to)
     Spinner mToSpinner;
 
-    //todo refactor this! (╯°□°）╯︵ ┻━┻"
-
     ArrayAdapter<String> adapter;
 
     @Inject
@@ -120,7 +118,6 @@ public class LanguageSelectView extends LinearLayout {
         adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mTranslatePresenter.getSupportedLang());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mFromSpinner.setAdapter(adapter);
-        //todo another adapter? yes need 2 adapters with two lists of languages
         mToSpinner.setAdapter(adapter);
     }
 

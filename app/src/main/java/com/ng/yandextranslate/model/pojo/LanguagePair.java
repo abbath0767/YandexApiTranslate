@@ -1,5 +1,7 @@
 package com.ng.yandextranslate.model.pojo;
 
+import android.util.Log;
+
 /**
  * Created by NG on 19.03.17.
  */

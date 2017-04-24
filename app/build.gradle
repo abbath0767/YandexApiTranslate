@@ -37,6 +37,7 @@ ext {
     rxAdapter = '2.0.2'
     dagger = '2.9'
     okhttp = '3.6.0'
+    stetho = '1.4.2'
 }
 
 dependencies {
@@ -75,4 +76,6 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
     provided 'javax.annotation:jsr250-api:1.0'
+
+    compile "com.facebook.stetho:stetho:$stetho"
 }

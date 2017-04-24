@@ -42,7 +42,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     private LanguageTranscript mFrom;
     private LanguageTranscript mTo;
 
-    //todo unhardcode
+    //with love from russia
     private static String LANG = "ru";
 
 //    @Inject
@@ -124,7 +124,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                     mView.showTranslateResult(response.body().getResponseText());
                     mView.dismissProgressBar();
                     mHistoryDataService.addHistoryData(message, response.body().getResponseText(), getCurrentLanguagePair());
-                    mSPreferenceManager.saveCurrentLanguages(getCurrentLanguagePair());
+                    saveCurrentLangs();
                 } else {
                     mView.dismissProgressBar();
                     mView.showError(response.message());
@@ -137,6 +137,10 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
                 mView.showError(t.getMessage());
             }
         });
+    }
+
+    private void saveCurrentLangs() {
+        mSPreferenceManager.saveCurrentLanguages(getCurrentLanguagePair());
     }
 
     public List<String> getSupportedLang() {
@@ -168,6 +172,7 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
         LanguageTranscript tmp = mFrom;
         mFrom = mTo;
         mTo = tmp;
+        saveCurrentLangs();
     }
 
     private void swapView() {
@@ -180,11 +185,14 @@ public class TranslatePresenterImpl implements TranslateContract.Presenter {
     public void forceTranslate() {
         Log.d(TAG, "FORCE TRANSLATE. CURRENT LANGS: " + getCurrentLanguagePair().getLangPairStringValue());
         getTranslate(mView.getOriginal());
+        saveCurrentLangs();
     }
 
     public void makeLastFavorite() {
-        int lastHistoryId = mHistoryDataService.getHistory((int) mHistoryDataService.getHistoryCount()).getKey();
+        int lastHistoryId = mHistoryDataService.getLastHistoryId();
+        Log.d(TAG, "last id : " + lastHistoryId);
         boolean isFavor = mHistoryDataService.getHistory(lastHistoryId).isFavorite();
-        mHistoryDataService.makeFavorite((int) mHistoryDataService.getHistoryCount(), !isFavor);
+        Log.d(TAG, "FAVORITE CURRENT? : " + isFavor);
+        mHistoryDataService.makeFavorite(lastHistoryId, !isFavor);
     }
 }

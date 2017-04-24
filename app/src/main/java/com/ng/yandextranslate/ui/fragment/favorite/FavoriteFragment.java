@@ -73,7 +73,6 @@ public class FavoriteFragment extends BaseFragment implements FavoriteContract.V
 
     private void initRecyclerView() {
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        //todo need new adapter!
         mRecycler.setAdapter(mAdapter);
     }
 

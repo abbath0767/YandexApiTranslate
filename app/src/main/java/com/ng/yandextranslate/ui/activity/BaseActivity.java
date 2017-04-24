@@ -20,6 +20,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.ng.yandextranslate.R;
+import com.ng.yandextranslate.ui.fragment.about.AboutFragment;
 import com.ng.yandextranslate.ui.fragment.favorite.FavoriteFragment;
 import com.ng.yandextranslate.ui.fragment.history.HistoryFragment;
 import com.ng.yandextranslate.ui.fragment.traslate.TranslateFragment;
@@ -91,7 +92,6 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
             }
         };
 
-        //todo deprecated?
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
@@ -133,7 +133,7 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
                 break;
             }
             case ABOUT: {
-                //todo about
+                fragment = getAboutFragment();
                 break;
             }
             default:
@@ -157,7 +157,6 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
     }
 
     private Fragment getTranslateFragment() {
-        //todo mb change this?
         return TranslateFragment.newInstance(null);
     }
 
@@ -176,5 +175,9 @@ public class BaseActivity extends AppCompatActivity implements DrawerItemClickLi
 
     public Fragment getFavoriteFragment() {
         return FavoriteFragment.newInstance(null);
+    }
+
+    public Fragment getAboutFragment() {
+        return AboutFragment.newInstance(null);
     }
 }

@@ -41,6 +41,7 @@ import com.ng.yandextranslate.presentation.implementation.translate.TranslateMod
 import com.ng.yandextranslate.presentation.implementation.translate.TranslatePresenterImpl;
 import com.ng.yandextranslate.ui.fragment.BaseFragment;
 import com.ng.yandextranslate.ui.view.LanguageSelectView;
+import com.ng.yandextranslate.util.DebounceTextWatcher;
 import com.ng.yandextranslate.util.DoneOnEditorActionListener;
 
 import static com.ng.yandextranslate.util.AppPrefs.DELAY_BEFORE_POST;
@@ -71,6 +72,9 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
     @Inject
     TranslatePresenterImpl mPresenter;
 
+    @Inject
+    DebounceTextWatcher mDebounceTextWatcher;
+
     public static Fragment newInstance(Bundle args) {
         Fragment fragment = new TranslateFragment();
         return fragment;
@@ -87,39 +91,7 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
 
         mEditTextIn.setOnEditorActionListener(new DoneOnEditorActionListener());
 
-        mEditTextIn.addTextChangedListener(
-                new TextWatcher() {
-                    private Timer timer = new Timer();
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (timer != null) {
-                            timer.cancel();
-                        }
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(final Editable s) {
-                        timer.cancel();
-                        timer = new Timer();
-                        timer.schedule(
-                                new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        if (!TextUtils.isEmpty(s.toString())) {
-                                            mPresenter.getTranslate(s.toString());
-                                        }
-                                    }
-                                },
-                                DELAY_BEFORE_POST
-                        );
-                    }
-                }
-        );
+        mEditTextIn.addTextChangedListener(mDebounceTextWatcher);
 
         mLanguageSelectView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -140,15 +112,14 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         mButtonAddToFavor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                mPresenter.makeLastFavorite();
-                showDialog(getString(R.string.add_to_favor));
+                if (!TextUtils.isEmpty(mEditTextIn.getText().toString())) {
+                    mPresenter.makeLastFavorite();
+                }
             }
         });
 
         return rootView;
     }
-
-
 
     public static TranslateComponent getTranslateComponent() {
         return mTranslateComponent;
@@ -185,7 +156,6 @@ public class TranslateFragment extends BaseFragment implements TranslateContract
         mLanguageSelectView.setToSpinnerPosition(position);
     }
 
-    //todo change textView and progressBar to one custom view
     @Override
     public void showProgressBar() {
         Log.d(TAG, "showProgressBar");

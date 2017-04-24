@@ -30,4 +30,6 @@ public interface Repository {
     void makeHistoryFavorite(int id, boolean isFavorite);
 
     HistoryData getHistory(int id);
+
+    int getLastHistoryId();
 }

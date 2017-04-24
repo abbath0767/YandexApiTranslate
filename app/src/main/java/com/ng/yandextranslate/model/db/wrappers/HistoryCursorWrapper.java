@@ -1,6 +1,7 @@
 package com.ng.yandextranslate.model.db.wrappers;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import static com.ng.yandextranslate.model.db.table.HistoryShema.*;
 import com.ng.yandextranslate.model.pojo.HistoryData;

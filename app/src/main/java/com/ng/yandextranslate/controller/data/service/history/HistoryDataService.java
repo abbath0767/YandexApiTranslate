@@ -54,7 +54,6 @@ public class HistoryDataService {
     }
 
     public void unMakeAllFavorites() {
-        //todo need update and checnge this to repository
         List<HistoryData> favorites = getFavoriteHistoryDataList();
         for (HistoryData history: favorites) {
             makeFavorite(history.getKey(), false);
@@ -63,5 +62,9 @@ public class HistoryDataService {
 
     public long getHistoryCount() {
         return repository.getDataCount(HistoryShema.HistoryTable.NAME);
+    }
+
+    public int getLastHistoryId() {
+        return repository.getLastHistoryId();
     }
 }

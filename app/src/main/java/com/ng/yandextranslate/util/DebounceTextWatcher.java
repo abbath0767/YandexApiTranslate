@@ -9,6 +9,8 @@ import com.ng.yandextranslate.presentation.implementation.translate.TranslatePre
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import static com.ng.yandextranslate.util.AppPrefs.DELAY_BEFORE_POST;
 
 /**
@@ -20,6 +22,7 @@ public class DebounceTextWatcher implements TextWatcher {
     private Timer timer = new Timer();
     private TranslatePresenterImpl mTranslatePresenter;
 
+    @Inject
     public DebounceTextWatcher(TranslatePresenterImpl presenter) {
         this.mTranslatePresenter = presenter;
     }
@@ -44,8 +47,7 @@ public class DebounceTextWatcher implements TextWatcher {
                     @Override
                     public void run() {
                         if (!TextUtils.isEmpty(s.toString())) {
-                            //todo update with logic in presenter
-//                            mTranslatePresenter.getTranslate(s.toString(), getCurrentLanguagePair());
+                            mTranslatePresenter.getTranslate(s.toString());
                         }
                     }
                 },

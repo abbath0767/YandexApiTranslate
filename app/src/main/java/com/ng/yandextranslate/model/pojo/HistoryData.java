@@ -108,5 +108,48 @@ public class HistoryData {
                 '}';
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        final HistoryData that = (HistoryData) o;
+
+        if (key != that.key) return false;
+        if (time != that.time) return false;
+        if (favorite != that.favorite) return false;
+        if (languagePair != null ? !languagePair.equals(that.languagePair) : that.languagePair != null)
+            return false;
+        if (originalText != null ? !originalText.equals(that.originalText) : that.originalText != null)
+            return false;
+        return translateText != null ? translateText.equals(that.translateText) : that.translateText == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key;
+        result = 31 * result + (languagePair != null ? languagePair.hashCode() : 0);
+        result = 31 * result + (originalText != null ? originalText.hashCode() : 0);
+        result = 31 * result + (translateText != null ? translateText.hashCode() : 0);
+        result = 31 * result + (int) (time ^ (time >>> 32));
+        result = 31 * result + (favorite ? 1 : 0);
+        return result;
+    }
+
+    public static class NullableHistoryData extends HistoryData {
+
+        private static NullableHistoryData instance;
+
+        public static NullableHistoryData getInstance() {
+            if (instance == null) {
+                instance = new NullableHistoryData();
+            }
+            return instance;
+        }
+
+        private NullableHistoryData() {
+            super(-1, null, "nullable history", "nullable history");
+        }
+    }
 }

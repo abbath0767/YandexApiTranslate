@@ -29,7 +29,6 @@ public class NetworkModule {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.addInterceptor(logging);
 
-        //todo change
         client.connectTimeout(TIMEOUT, TimeUnit.SECONDS);
 
         Retrofit retrofit = new Retrofit.Builder()

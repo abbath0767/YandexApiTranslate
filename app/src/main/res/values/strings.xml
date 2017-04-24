@@ -15,8 +15,5 @@
         <item>О приложении</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
+    <string name="about_info">Приложение для школы яндекс мобилизация.\nКак всегда все в последний день (╯°□°）╯︵ ┻━┻"</string>
 </resources>
