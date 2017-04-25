@@ -8,6 +8,7 @@ import com.facebook.stetho.Stetho;
  * Created by NG on 15.03.17.
  */
 
+//test changes
 public class App extends Application {
 
     private static AppComponent mAppComponent;
